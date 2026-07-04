@@ -1,0 +1,352 @@
+```html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Admin Vehicles</title>
+
+<link rel="stylesheet"
+href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
+<style>
+
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+    font-family:'Poppins',sans-serif;
+}
+
+body{
+    background:#0f172a;
+}
+
+.dashboard{
+    display:flex;
+    min-height:100vh;
+}
+
+/* SIDEBAR */
+
+.sidebar{
+    width:280px;
+    background:#111827;
+    padding:25px;
+    position:fixed;
+    height:100%;
+}
+
+.logo{
+    color:white;
+    font-size:28px;
+    font-weight:700;
+    margin-bottom:40px;
+}
+
+.logo span{
+    color:#3b82f6;
+}
+
+.menu{
+    display:flex;
+    flex-direction:column;
+    gap:12px;
+}
+
+.menu a{
+    text-decoration:none;
+    color:#cbd5e1;
+    padding:15px;
+    border-radius:12px;
+    transition:.3s;
+}
+
+.menu a:hover,
+.active{
+    background:#2563eb;
+    color:white !important;
+}
+
+.main{
+    margin-left:280px;
+    width:100%;
+    padding:30px;
+}
+
+.topbar{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    margin-bottom:25px;
+}
+
+.topbar h1{
+    color:white;
+}
+
+.count-box{
+    background:#1e293b;
+    color:white;
+    padding:12px 20px;
+    border-radius:12px;
+}
+
+/* TABLE */
+
+.table-card{
+    background:#1e293b;
+    border-radius:20px;
+    padding:25px;
+}
+
+table{
+    width:100%;
+    border-collapse:collapse;
+}
+
+th{
+    background:#2563eb;
+    color:white;
+    padding:15px;
+}
+
+td{
+    padding:15px;
+    color:#e2e8f0;
+    border-bottom:1px solid #334155;
+    text-align:center;
+}
+
+.vehicle-img{
+    width:90px;
+    height:70px;
+    object-fit:cover;
+    border-radius:10px;
+}
+
+.view-btn{
+    background:#16a34a;
+    color:white;
+    padding:8px 15px;
+    text-decoration:none;
+    border-radius:8px;
+}
+
+.delete-btn{
+    background:#dc2626;
+    color:white;
+    padding:8px 15px;
+    text-decoration:none;
+    border-radius:8px;
+}
+
+.action-box{
+    display:flex;
+    justify-content:center;
+    gap:10px;
+}
+
+</style>
+</head>
+<body>
+
+<div class="dashboard">
+
+    <!-- Sidebar -->
+
+    <div class="sidebar">
+
+        <div class="logo">
+            Rental<span>Hub</span>
+        </div>
+
+        <div class="menu">
+
+            <a href="{% url 'admin_dashboard' %}">
+                Dashboard
+            </a>
+
+            <a href="{% url 'admin_users' %}">
+                <i class="fa-solid fa-users"></i>
+                Users
+            </a>
+
+            <a href="{% url 'admin_vehicles' %}" class="active">
+                    <i class="fa-solid fa-car"></i>
+                Vehicles
+            </a>
+
+            <a href="{% url 'admin_bookings' %}">
+                    <i class="fa-solid fa-calendar-check"></i>
+                Bookings
+            </a>
+
+            <a href="{% url 'admin_payments' %}">
+                 <i class="fa-solid fa-credit-card"></i>
+                Payments
+            </a>
+
+            <a href="{% url 'admin_verifications' %}">
+                <i class="fa-solid fa-file-shield"></i>
+                Verification
+             </a>
+
+             <a href="{% url 'logout' %}">
+                    <i class="fa-solid fa-right-from-bracket"></i>
+                Logout
+
+
+
+        </div>
+
+    </div>
+
+    <!-- Main -->
+
+    <div class="main">
+
+        <div class="topbar">
+
+            <h1>Vehicle Management</h1>
+
+            <div class="count-box">
+                Total Vehicles : {{ vehicles.count }}
+            </div>
+
+        </div>
+
+        <div class="table-card">
+
+            <table>
+
+                <tr>
+
+                    <th>ID</th>
+                    <th>Image</th>
+                    <th>Vehicle</th>
+                    <th>Owner</th>
+                    <th>Location</th>
+                    <th>Fuel</th>
+                    <th>Status</th>
+                    <th>Availability</th>
+                    <th>Actions</th>
+
+                </tr>
+
+                {% for v in vehicles %}
+
+                <tr>
+
+                    <td>{{ v.id }}</td>
+
+                    <td>
+
+                        {% if v.image1 %}
+                        <img
+                        src="{{ v.image1.url }}"
+                        class="vehicle-img">
+                        {% endif %}
+
+                    </td>
+
+                    <td>{{ v.brand }}</td>
+
+                    <td>{{ v.owner.name }}</td>
+
+                    <td>{{ v.location }}</td>
+
+                    <td>{{ v.fuel }}</td>
+
+                    
+
+<td>
+    {% if v.is_available %}
+        <span style="color:#22c55e;font-weight:bold;">
+            Available
+        </span>
+    {% else %}
+        <span style="color:#ef4444;font-weight:bold;">
+            Unavailable
+        </span>
+    {% endif %}
+</td>
+
+<td>
+
+    {% if v.is_available %}
+
+        <a
+        href="{% url 'vehicle_unavailable' v.id %}"
+        style="
+        background:#f59e0b;
+        color:white;
+        padding:8px 12px;
+        border-radius:8px;
+        text-decoration:none;">
+            Make Unavailable
+        </a>
+
+    {% else %}
+
+        <a
+        href="{% url 'vehicle_available' v.id %}"
+        style="
+        background:#22c55e;
+        color:white;
+        padding:8px 12px;
+        border-radius:8px;
+        text-decoration:none;">
+            Make Available
+        </a>
+
+    {% endif %}
+
+</td>
+
+<td>
+
+    <div class="action-box">
+
+        <a
+        href="{% url 'vehicle_details' v.id %}"
+        class="view-btn">
+            View
+        </a>
+
+        <a
+        href="{% url 'delete_vehicle_admin' v.id %}"
+        class="delete-btn"
+        onclick="return confirm('Delete vehicle?')">
+            Delete
+        </a>
+
+    </div>
+
+</td>
+
+                </tr>
+
+                {% empty %}
+
+                <tr>
+
+                    <td colspan="9">
+                        No Vehicles Found
+                    </td>
+
+                </tr>
+
+                {% endfor %}
+
+            </table>
+
+        </div>
+
+    </div>
+
+</div>
+
+</body>
+</html>
+```

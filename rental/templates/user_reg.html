@@ -1,0 +1,139 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Register</title>
+
+<style>
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Segoe UI', sans-serif;
+}
+
+body {
+    height: 100vh;
+    background: linear-gradient(rgba(102,126,234,0.6), rgba(118,75,162,0.6)),
+                url("{% static 'images/bg.jpg' %}") no-repeat center;
+    background-size: cover;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+/* Glass Card */
+.container {
+    width: 350px;
+    padding: 30px;
+    border-radius: 15px;
+    background: rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(15px);
+    box-shadow: 0 8px 32px rgba(0,0,0,0.3);
+    color: white;
+}
+
+.container h2 {
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+/* Input Fields */
+.input-box {
+    margin-bottom: 15px;
+}
+
+.input-box input {
+    width: 100%;
+    padding: 10px;
+    border: none;
+    outline: none;
+    border-radius: 8px;
+    background: rgba(255,255,255,0.2);
+    color: white;
+}
+
+.input-box input::placeholder {
+    color: #ddd;
+}
+
+/* Button */
+button {
+    width: 100%;
+    padding: 10px;
+    border: none;
+    border-radius: 8px;
+    background: linear-gradient(to right, #00c6ff, #0072ff);
+    color: white;
+    font-size: 16px;
+    cursor: pointer;
+    transition: 0.3s;
+}
+
+button:hover {
+    transform: scale(1.05);
+}
+
+/* Footer */
+.footer {
+    text-align: center;
+    margin-top: 10px;
+    font-size: 13px;
+}
+</style>
+
+
+</head>
+
+<body>
+
+<div class="container">
+    <h2>Create Account</h2>
+
+    <form method="POST" action="/register_user">
+        {% csrf_token %}
+
+        <div class="input-box">
+            <input type="text" name="name" placeholder="Full Name" required>
+        </div>
+
+        <div class="input-box">
+            <input type="email" name="email" placeholder="Email Address" pattern="[a-z0-9._%+\-]+@[a-z0-9.\-]+\.[a-z]{2,}$" required="">
+        </div>
+
+        <div class="input-box">
+            <input type="number" name="age" placeholder="Age" required>
+        </div>
+
+        <div class="input-box">
+            <input type="tel" name="phone" placeholder="Phone Number"  pattern="[0-9]{10}"  required="">
+        </div>
+
+        <div class="input-box">
+            <input type="text" name="username" placeholder="Username" required>
+        </div>
+        <div class="input-box">
+    <input type="password" name="password" placeholder="Password"  pattern="(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,}" required="">
+        </div>
+
+        <button type="submit">Sign Up</button>
+
+        <div class="footer">
+            Already have an account? Login
+        </div>
+
+    </form>
+</div>
+
+<script>
+        function myFunction() {
+                alert("successfully registered").then(response => {
+                window.location.href = 'index2.html';
+                })
+            }
+</script>
+
+</body>
+</html>

@@ -1,0 +1,686 @@
+{% load static %}
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <title>RentalHub</title>
+
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"
+    />
+
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+
+    <link
+      href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+        font-family: "Poppins", sans-serif;
+      }
+
+      body {
+        background: #0f172a;
+        overflow-x: hidden;
+      }
+
+      /* BACKGROUND ANIMATION */
+
+      .bg-animation {
+        position: fixed;
+        width: 100%;
+        height: 100vh;
+        overflow: hidden;
+        z-index: -1;
+      }
+
+      .circle {
+        position: absolute;
+        border-radius: 50%;
+        background: rgba(59, 130, 246, 0.15);
+        animation: float 12s infinite linear;
+      }
+
+      .circle:nth-child(1) {
+        width: 300px;
+        height: 300px;
+        left: -100px;
+        top: 120px;
+      }
+
+      .circle:nth-child(2) {
+        width: 250px;
+        height: 250px;
+        right: -80px;
+        top: 300px;
+        animation-duration: 15s;
+      }
+
+      .circle:nth-child(3) {
+        width: 200px;
+        height: 200px;
+        left: 40%;
+        bottom: -60px;
+        animation-duration: 18s;
+      }
+
+      @keyframes float {
+        0% {
+          transform: translateY(0px) rotate(0deg);
+        }
+
+        50% {
+          transform: translateY(-40px) rotate(180deg);
+        }
+
+        100% {
+          transform: translateY(0px) rotate(360deg);
+        }
+      }
+
+      /* NAVBAR */
+
+      .navbar {
+        width: 92%;
+        margin: 20px auto;
+        padding: 18px 35px;
+        border-radius: 24px;
+        background: rgba(255, 255, 255, 0.08);
+        backdrop-filter: blur(14px);
+        border: 1px solid rgba(255, 255, 255, 0.08);
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+      }
+
+      .logo {
+        color: white;
+        font-size: 30px;
+        font-weight: 700;
+      }
+
+      .logo span {
+        color: #3b82f6;
+      }
+
+      .nav-links {
+        display: flex;
+        align-items: center;
+        gap: 18px;
+      }
+
+      .nav-links a {
+        text-decoration: none;
+        color: #cbd5e1;
+        transition: 0.3s;
+        font-size: 15px;
+      }
+
+      .nav-links a:hover {
+        color: white;
+      }
+
+      .nav-btn {
+        padding: 12px 22px;
+        border-radius: 14px;
+        background: linear-gradient(135deg, #2563eb, #3b82f6);
+        color: white !important;
+        box-shadow: 0 10px 25px rgba(37, 99, 235, 0.35);
+      }
+
+      .nav-btn:hover {
+        transform: translateY(-3px);
+      }
+
+      /* HERO */
+
+      .hero {
+        width: 92%;
+        margin: auto;
+        min-height: 85vh;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 50px;
+      }
+
+      .hero-left {
+        flex: 1;
+        animation: slideLeft 1s ease;
+      }
+
+      .hero-left h1 {
+        color: white;
+        font-size: 68px;
+        line-height: 1.1;
+        margin-bottom: 25px;
+      }
+
+      .hero-left h1 span {
+        color: #60a5fa;
+      }
+
+      .hero-left p {
+        color: #cbd5e1;
+        font-size: 18px;
+        line-height: 1.8;
+        margin-bottom: 35px;
+      }
+
+      .hero-buttons {
+        display: flex;
+        gap: 20px;
+      }
+
+      .primary-btn,
+      .secondary-btn {
+        padding: 16px 30px;
+        border-radius: 16px;
+        text-decoration: none;
+        font-weight: 600;
+        transition: 0.4s;
+      }
+
+      .primary-btn {
+        background: linear-gradient(135deg, #2563eb, #3b82f6);
+        color: white;
+        box-shadow: 0 15px 35px rgba(37, 99, 235, 0.35);
+      }
+
+      .secondary-btn {
+        border: 1px solid rgba(255, 255, 255, 0.2);
+        color: white;
+        background: rgba(255, 255, 255, 0.06);
+      }
+
+      .primary-btn:hover,
+      .secondary-btn:hover {
+        transform: translateY(-5px);
+      }
+
+      .hero-right {
+        flex: 1;
+        position: relative;
+        animation: slideRight 1s ease;
+      }
+
+      .hero-image {
+        width: 100%;
+        border-radius: 30px;
+        box-shadow: 0 30px 60px rgba(0, 0, 0, 0.4);
+      }
+
+      .floating-card {
+        position: absolute;
+        background: rgba(255, 255, 255, 0.08);
+        backdrop-filter: blur(14px);
+        border-radius: 20px;
+        padding: 20px;
+        color: white;
+        border: 1px solid rgba(255, 255, 255, 0.08);
+        animation: floatCard 4s infinite ease-in-out;
+      }
+
+      .floating-card i {
+        color: #60a5fa;
+        font-size: 24px;
+        margin-bottom: 10px;
+      }
+
+      .card1 {
+        top: 20px;
+        left: -40px;
+      }
+
+      .card2 {
+        bottom: 30px;
+        right: -30px;
+      }
+
+      @keyframes floatCard {
+        0% {
+          transform: translateY(0px);
+        }
+
+        50% {
+          transform: translateY(-12px);
+        }
+
+        100% {
+          transform: translateY(0px);
+        }
+      }
+
+      @keyframes slideLeft {
+        from {
+          opacity: 0;
+          transform: translateX(-80px);
+        }
+
+        to {
+          opacity: 1;
+          transform: translateX(0px);
+        }
+      }
+
+      @keyframes slideRight {
+        from {
+          opacity: 0;
+          transform: translateX(80px);
+        }
+
+        to {
+          opacity: 1;
+          transform: translateX(0px);
+        }
+      }
+
+      /* SEARCH BOX */
+
+      .search-section {
+        width: 92%;
+        margin: 20px auto 80px;
+      }
+
+      .search-box {
+        background: rgba(255, 255, 255, 0.08);
+        backdrop-filter: blur(14px);
+        border-radius: 24px;
+        padding: 25px;
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        gap: 20px;
+        border: 1px solid rgba(255, 255, 255, 0.08);
+      }
+
+      .search-box input,
+      .search-box select {
+        width: 100%;
+        padding: 16px;
+        border: none;
+        outline: none;
+        border-radius: 14px;
+        background: rgba(255, 255, 255, 0.06);
+        color: white;
+      }
+
+      .search-box input::placeholder {
+        color: #cbd5e1;
+      }
+
+      .search-btn {
+        background: linear-gradient(135deg, #2563eb, #3b82f6);
+        border: none;
+        color: white;
+        border-radius: 14px;
+        font-size: 16px;
+        cursor: pointer;
+        transition: 0.4s;
+      }
+
+      .search-btn:hover {
+        transform: scale(1.03);
+      }
+
+      /* FEATURES */
+
+      .features {
+        width: 92%;
+        margin: auto auto 80px;
+      }
+
+      .section-title {
+        text-align: center;
+        color: white;
+        font-size: 46px;
+        margin-bottom: 20px;
+      }
+
+      .section-subtitle {
+        text-align: center;
+        color: #94a3b8;
+        margin-bottom: 60px;
+      }
+
+      .feature-grid {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 30px;
+      }
+
+      .feature-card {
+        background: rgba(255, 255, 255, 0.08);
+        backdrop-filter: blur(14px);
+        border-radius: 28px;
+        padding: 40px 30px;
+        border: 1px solid rgba(255, 255, 255, 0.08);
+        transition: 0.5s;
+        text-align: center;
+      }
+
+      .feature-card:hover {
+        transform: translateY(-15px);
+        box-shadow: 0 25px 50px rgba(0, 0, 0, 0.35);
+      }
+
+      .feature-icon {
+        width: 90px;
+        height: 90px;
+        background: linear-gradient(135deg, #2563eb, #3b82f6);
+        border-radius: 24px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin: auto auto 25px;
+        box-shadow: 0 15px 35px rgba(37, 99, 235, 0.35);
+      }
+
+      .feature-icon i {
+        color: white;
+        font-size: 36px;
+      }
+
+      .feature-card h2 {
+        color: white;
+        margin-bottom: 18px;
+      }
+
+      .feature-card p {
+        color: #cbd5e1;
+        line-height: 1.8;
+        margin-bottom: 25px;
+      }
+
+      .feature-btn {
+        display: inline-block;
+        padding: 14px 26px;
+        border-radius: 14px;
+        background: linear-gradient(135deg, #2563eb, #3b82f6);
+        color: white;
+        text-decoration: none;
+        transition: 0.3s;
+      }
+
+      .feature-btn:hover {
+        transform: scale(1.05);
+      }
+
+      /* ===== NEW REVIEW SECTION ===== */
+      .review-section {
+        width: 92%;
+        margin: 0 auto 100px;
+        text-align: center;
+        padding: 60px 30px;
+        background: rgba(255, 255, 255, 0.04);
+        backdrop-filter: blur(14px);
+        border-radius: 32px;
+        border: 1px solid rgba(255, 255, 255, 0.06);
+      }
+
+      .review-section h2 {
+        color: white;
+        font-size: 38px;
+        font-weight: 700;
+        margin-bottom: 12px;
+      }
+
+      .review-section p {
+        color: #94a3b8;
+        font-size: 18px;
+        max-width: 600px;
+        margin: 0 auto 35px;
+      }
+
+      .review-btn {
+        display: inline-block;
+        padding: 18px 48px;
+        border-radius: 18px;
+        background: linear-gradient(135deg, #2563eb, #3b82f6);
+        color: white;
+        font-size: 18px;
+        font-weight: 600;
+        text-decoration: none;
+        box-shadow: 0 15px 35px rgba(37, 99, 235, 0.35);
+        transition: 0.4s;
+        border: none;
+        cursor: pointer;
+      }
+
+      .review-btn i {
+        margin-right: 10px;
+      }
+
+      .review-btn:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 20px 45px rgba(37, 99, 235, 0.45);
+      }
+
+      /* RESPONSIVE */
+
+      @media (max-width: 1100px) {
+        .hero {
+          flex-direction: column;
+          text-align: center;
+          padding-top: 50px;
+        }
+
+        .hero-buttons {
+          justify-content: center;
+        }
+
+        .feature-grid {
+          grid-template-columns: 1fr;
+        }
+
+        .search-box {
+          grid-template-columns: 1fr;
+        }
+
+        .review-section h2 {
+          font-size: 30px;
+        }
+
+        .review-section p {
+          font-size: 16px;
+        }
+      }
+
+      @media (max-width: 768px) {
+        .navbar {
+          flex-direction: column;
+          gap: 20px;
+        }
+
+        .nav-links {
+          flex-wrap: wrap;
+          justify-content: center;
+        }
+
+        .hero-left h1 {
+          font-size: 48px;
+        }
+
+        .review-btn {
+          padding: 14px 32px;
+          font-size: 16px;
+        }
+      }
+    </style>
+  </head>
+
+  <body>
+    <div class="bg-animation">
+      <div class="circle"></div>
+      <div class="circle"></div>
+      <div class="circle"></div>
+    </div>
+
+    <!-- NAVBAR -->
+
+    <div class="navbar">
+      <div class="logo">Rental<span>Hub</span></div>
+
+      <div class="nav-links">
+        <a href="#">Home</a>
+
+        <a href="profile">Profile</a>
+
+        <a href="{% url 'vehicle_list' %}"> Vehicles </a>
+
+        <a href="contact"> Contact Admin </a>
+
+        <a href="{% url 'logout' %}" class="nav-btn"> Logout </a>
+      </div>
+    </div>
+
+    <!-- HERO -->
+
+    <div class="hero">
+      <div class="hero-left">
+        <h1>
+          Rent Vehicles
+          <span>Smarter</span>
+          & Faster
+        </h1>
+
+        <p>
+          Discover premium cars, bikes and trusted technicians with a modern
+          rental experience. Fast booking, secure verification and smooth
+          management.
+        </p>
+
+        <div class="hero-buttons">
+          <a href="{% url 'vehicle_list' %}" class="primary-btn">
+            Explore Vehicles
+          </a>
+
+          <a href="profile" class="secondary-btn"> Dashboard </a>
+        </div>
+      </div>
+
+      <div class="hero-right">
+        <img src="{% static 'images/banner.png' %}" class="hero-image" />
+
+        <div class="floating-card card1">
+          <i class="fa-solid fa-car"></i>
+
+          <h3>500+ Vehicles</h3>
+
+          <p>Available instantly</p>
+        </div>
+
+        <div class="floating-card card2">
+          <i class="fa-solid fa-shield"></i>
+
+          <h3>Verified Users</h3>
+
+          <p>Secure booking system</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- SEARCH (commented out) -->
+
+    <!-- <div class="search-section">
+      <form method="GET" action="/search" class="search-box">
+        <input type="text" name="location" placeholder="Enter Location" />
+
+        <select name="type">
+          <option value="">Select Type</option>
+
+          <option value="vehicle">Vehicle</option>
+
+          <option value="service">Technician</option>
+        </select>
+
+        <input type="text" placeholder="Search Vehicle Brand" />
+
+        <button type="submit" class="search-btn">Search Now</button>
+      </form>
+    </div> -->
+
+    <!-- FEATURES -->
+
+    <div class="features">
+      <h1 class="section-title">Our Services</h1>
+
+      <p class="section-subtitle">
+        Premium rental ecosystem with modern features
+      </p>
+
+      <div class="feature-grid">
+        <!-- VEHICLE -->
+
+        <div class="feature-card">
+          <div class="feature-icon">
+            <i class="fa-solid fa-car"></i>
+          </div>
+
+          <h2>Rent Vehicles</h2>
+
+          <p>
+            Explore premium cars, bikes and rental vehicles with instant booking
+            and secure verification.
+          </p>
+
+          <a href="{% url 'vehicle_list' %}" class="feature-btn"> Explore </a>
+        </div>
+
+        <!-- reviews -->
+
+       <div class="feature-card">
+    <div class="feature-icon">
+        <i class="fa-solid fa-star"></i>
+    </div>
+
+    <h2>Customer Reviews</h2>
+
+    <p>
+        Read genuine customer reviews and ratings, or share your own experience
+        to help others choose the right vehicle.
+    </p>
+
+    <a href="view-review" class="feature-btn">
+        View Reviews
+    </a>
+</div>
+
+        <!-- ADD VEHICLE -->
+
+        <div class="feature-card">
+          <div class="feature-icon">
+            <i class="fa-solid fa-circle-plus"></i>
+          </div>
+
+          <h2>Add Vehicle</h2>
+
+          <p>
+            List your car, bike or auto for rent and start earning money through
+            the RentalHub marketplace platform.
+          </p>
+
+          <a href="/listing" class="feature-btn"> Add Vehicle </a>
+        </div>
+      </div>
+    </div>
+
+    <!-- ===== NEW: REVIEW BUTTON SECTION ===== -->
+    <div class="review-section">
+      <h2>Share Your Experience</h2>
+      <p>Your feedback helps us improve and helps others make the right choice.</p>
+      <a href="review" class="review-btn">
+        <i class="fa-solid fa-pen-to-square"></i> Write a Review
+      </a>
+    </div>
+
+  </body>
+</html>

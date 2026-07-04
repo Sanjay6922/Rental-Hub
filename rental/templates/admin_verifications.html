@@ -1,0 +1,305 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Verification Center</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Poppins', sans-serif; }
+        body { background: #0f172a; }
+        .dashboard { display: flex; min-height: 100vh; }
+
+        /* Sidebar */
+        .sidebar { width: 280px; background: #111827; padding: 25px; position: fixed; height: 100%; overflow-y: auto; }
+        .logo { color: white; font-size: 28px; font-weight: 700; margin-bottom: 40px; }
+        .logo span { color: #3b82f6; }
+        .menu { display: flex; flex-direction: column; gap: 12px; }
+        .menu a { text-decoration: none; color: #cbd5e1; padding: 15px; border-radius: 12px; transition: 0.3s; }
+        .menu a:hover, .active { background: #2563eb; color: white !important; }
+
+        /* Main */
+        .main { margin-left: 280px; width: 100%; padding: 30px; }
+        .topbar { display: flex; justify-content: space-between; align-items: center; margin-bottom: 25px; }
+        .topbar h1 { color: white; }
+
+        /* Cards */
+        .verify-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(400px, 1fr)); gap: 25px; }
+        .verify-card { background: #1e293b; border-radius: 20px; overflow: hidden; transition: 0.3s; }
+        .verify-card:hover { transform: translateY(-5px); box-shadow: 0 15px 30px rgba(0,0,0,0.3); }
+        .vehicle-image { width: 100%; height: 220px; object-fit: cover; }
+        .card-body { padding: 20px; }
+        .card-body h3 { color: white; margin-bottom: 10px; font-size: 22px; }
+        .card-body p { color: #cbd5e1; margin-bottom: 6px; font-size: 14px; }
+        .card-body p strong { color: #94a3b8; }
+
+        /* Documents */
+        .doc-box { display: flex; gap: 10px; margin-top: 15px; flex-wrap: wrap; }
+        .doc-box img { width: 120px; height: 120px; object-fit: cover; border-radius: 10px; cursor: pointer; border: 2px solid transparent; transition: 0.3s; }
+        .doc-box img:hover { border-color: #3b82f6; transform: scale(1.02); }
+
+        /* Actions */
+        .action-box { display: flex; gap: 10px; margin-top: 20px; flex-wrap: wrap; }
+        .btn { flex: 1; min-width: 80px; text-align: center; padding: 12px; border-radius: 10px; text-decoration: none; color: white; font-weight: 600; font-size: 14px; transition: 0.3s; border: none; cursor: pointer; }
+        .btn:hover { transform: translateY(-2px); }
+        .approve { background: #16a34a; }
+        .approve:hover { background: #15803d; }
+        .reject { background: #dc2626; }
+        .reject:hover { background: #b91c1c; }
+        .view-btn { background: #6366f1; }
+        .view-btn:hover { background: #4f46e5; }
+
+        /* ===== DETAILS MODAL ===== */
+        .modal-overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.75); backdrop-filter: blur(6px); z-index: 9999; justify-content: center; align-items: center; }
+        .modal-box { background: #1e293b; border-radius: 24px; max-width: 680px; width: 94%; max-height: 90vh; overflow-y: auto; box-shadow: 0 30px 60px rgba(0,0,0,0.5); animation: fadeIn 0.3s ease; }
+        .modal-box::-webkit-scrollbar { width: 4px; }
+        .modal-box::-webkit-scrollbar-thumb { background: #3b82f6; border-radius: 10px; }
+
+        .modal-header { display: flex; justify-content: space-between; align-items: center; padding: 22px 28px 16px; border-bottom: 1px solid rgba(255,255,255,0.06); position: sticky; top: 0; background: #1e293b; border-radius: 24px 24px 0 0; z-index: 10; }
+        .modal-header h3 { color: white; font-size: 22px; font-weight: 700; display: flex; align-items: center; gap: 10px; }
+        .modal-header h3 i { color: #3b82f6; }
+        .modal-close { background: rgba(255,255,255,0.06); border: none; color: #94a3b8; width: 38px; height: 38px; border-radius: 50%; font-size: 20px; cursor: pointer; transition: 0.3s; display: flex; align-items: center; justify-content: center; }
+        .modal-close:hover { background: rgba(239,68,68,0.2); color: #ef4444; }
+
+        .modal-body { padding: 24px 28px 28px; }
+        .detail-row { display: flex; justify-content: space-between; padding: 12px 0; border-bottom: 1px solid rgba(255,255,255,0.04); }
+        .detail-row:last-of-type { border-bottom: none; }
+        .detail-row span { color: #94a3b8; font-size: 14px; }
+        .detail-row strong { color: white; font-size: 15px; font-weight: 500; text-align: right; max-width: 60%; word-break: break-word; }
+
+        .modal-docs { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-top: 18px; padding-top: 18px; border-top: 1px solid rgba(255,255,255,0.06); }
+        .modal-docs .doc-item { background: rgba(255,255,255,0.03); border-radius: 12px; overflow: hidden; border: 1px solid rgba(255,255,255,0.06); }
+        .modal-docs .doc-item img { width: 100%; height: 160px; object-fit: cover; cursor: pointer; transition: 0.3s; }
+        .modal-docs .doc-item img:hover { transform: scale(1.02); }
+        .modal-docs .doc-item .doc-label { padding: 8px 12px; font-size: 12px; color: #94a3b8; text-align: center; background: rgba(255,255,255,0.02); }
+
+        .modal-footer { padding: 16px 28px 22px; border-top: 1px solid rgba(255,255,255,0.06); text-align: right; }
+        .modal-footer .btn-close-modal { padding: 12px 32px; border: none; border-radius: 14px; background: linear-gradient(135deg, #2563eb, #3b82f6); color: white; font-weight: 600; cursor: pointer; transition: 0.3s; font-size: 15px; }
+        .modal-footer .btn-close-modal:hover { transform: translateY(-2px); box-shadow: 0 10px 25px rgba(37,99,235,0.3); }
+
+        /* ===== IMAGE PREVIEW MODAL ===== */
+        .img-modal { display: none; position: fixed; z-index: 10000; left: 0; top: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.92); justify-content: center; align-items: center; }
+        .img-modal img { max-width: 90%; max-height: 90%; object-fit: contain; border-radius: 12px; }
+        .img-modal .close-img { position: absolute; top: 20px; right: 30px; color: white; font-size: 40px; cursor: pointer; transition: 0.3s; }
+        .img-modal .close-img:hover { color: #ef4444; }
+
+        @keyframes fadeIn { from { opacity: 0; transform: scale(0.95); } to { opacity: 1; transform: scale(1); } }
+
+        /* Empty state */
+        .empty-state { grid-column: 1/-1; text-align: center; padding: 80px 20px; background: #1e293b; border-radius: 24px; }
+        .empty-state i { color: #60a5fa; font-size: 56px; margin-bottom: 20px; }
+        .empty-state h3 { color: white; font-size: 26px; margin-bottom: 10px; }
+        .empty-state p { color: #94a3b8; font-size: 16px; }
+
+        /* Responsive */
+        @media (max-width: 992px) { .sidebar { width: 100%; position: relative; height: auto; } .main { margin-left: 0; } .verify-grid { grid-template-columns: 1fr; } }
+        @media (max-width: 600px) { .modal-box { width: 96%; } .modal-body { padding: 16px; } .detail-row { flex-direction: column; align-items: flex-start; gap: 4px; } .detail-row strong { text-align: left; max-width: 100%; } .modal-docs { grid-template-columns: 1fr; } .action-box { flex-direction: column; } .btn { width: 100%; } }
+    </style>
+</head>
+<body>
+
+<div class="dashboard">
+
+    <!-- ===== SIDEBAR ===== -->
+    <div class="sidebar">
+        <div class="logo">Rental<span>Hub</span></div>
+        <div class="menu">
+            <a href="{% url 'admin_dashboard' %}"><i class="fa-solid fa-chart-pie"></i> Dashboard</a>
+            <a href="{% url 'admin_users' %}"><i class="fa-solid fa-users"></i> Users</a>
+            <a href="{% url 'admin_vehicles' %}"><i class="fa-solid fa-car"></i> Vehicles</a>
+            <a href="{% url 'admin_bookings' %}"><i class="fa-solid fa-calendar-check"></i> Bookings</a>
+            <a href="{% url 'admin_payments' %}"><i class="fa-solid fa-credit-card"></i> Payments</a>
+            <a href="{% url 'admin_verifications' %}" class="active"><i class="fa-solid fa-shield"></i> Verification</a>
+            <a href="{% url 'logout' %}"><i class="fa-solid fa-right-from-bracket"></i> Logout</a>
+        </div>
+    </div>
+
+    <!-- ===== MAIN CONTENT ===== -->
+    <div class="main">
+
+        <div class="topbar">
+            <h1><i class="fa-solid fa-shield" style="color:#3b82f6;"></i> Verification Center</h1>
+            <span style="color:#94a3b8;">Pending approvals: {{ vehicles.count }}</span>
+        </div>
+
+        <div class="verify-grid">
+            {% for v in vehicles %}
+
+            <div class="verify-card">
+                {% if v.image1 %}
+                <img src="{{ v.image1.url }}" class="vehicle-image" alt="{{ v.brand }}">
+                {% endif %}
+
+                <div class="card-body">
+                    <h3>{{ v.brand }}</h3>
+                    <p><strong>Owner:</strong> {{ v.owner.name|default:"N/A" }}</p>
+                    <p><strong>Location:</strong> {{ v.location }}</p>
+                    <p><strong>Vehicle No:</strong> {{ v.number_plate }}</p>
+                    <p><strong>Fuel:</strong> {{ v.fuel|title }}</p>
+
+                    <div class="doc-box">
+                        {% if v.img1 %}
+                        <img src="{{ v.img1.url }}" onclick="showImage(this.src)" alt="RC Book 1">
+                        {% endif %}
+                        {% if v.img2 %}
+                        <img src="{{ v.img2.url }}" onclick="showImage(this.src)" alt="RC Book 2">
+                        {% endif %}
+                    </div>
+
+                    <div class="action-box">
+                        <!-- ✅ View Details Button -->
+                        <button class="btn view-btn" onclick="openDetailsModal({{ forloop.counter0 }})">
+                            <i class="fa-regular fa-eye"></i> View
+                        </button>
+                        <a href="{% url 'approve_vehicle' v.id %}" class="btn approve">
+                            <i class="fa-regular fa-circle-check"></i> Approve
+                        </a>
+                        <a href="{% url 'reject_vehicle' v.id %}" class="btn reject">
+                            <i class="fa-regular fa-circle-xmark"></i> Reject
+                        </a>
+                    </div>
+                </div>
+            </div>
+
+            {% empty %}
+            <div class="empty-state">
+                <i class="fa-regular fa-inbox"></i>
+                <h3>No Pending Verifications</h3>
+                <p>All vehicles have been verified. Check back later.</p>
+            </div>
+            {% endfor %}
+        </div>
+
+    </div>
+</div>
+
+<!-- ===== DETAILS MODAL ===== -->
+<div class="modal-overlay" id="detailsModal">
+    <div class="modal-box">
+        <div class="modal-header">
+            <h3><i class="fa-regular fa-id-card"></i> Vehicle Details</h3>
+            <button class="modal-close" onclick="closeDetailsModal()"><i class="fa-solid fa-xmark"></i></button>
+        </div>
+        <div class="modal-body" id="detailsModalBody">
+            <!-- Populated by JavaScript -->
+        </div>
+        <div class="modal-footer">
+            <button class="btn-close-modal" onclick="closeDetailsModal()">Close</button>
+        </div>
+    </div>
+</div>
+
+<!-- ===== IMAGE PREVIEW MODAL ===== -->
+<div class="img-modal" id="imgModal" onclick="closeImageModal()">
+    <span class="close-img" onclick="closeImageModal()">&times;</span>
+    <img id="modalImg" src="" alt="Document Preview">
+</div>
+
+<!-- ===== SCRIPTS ===== -->
+<script>
+    // ===== VEHICLE DATA (from Django context) =====
+    const vehiclesData = [
+        {% for v in vehicles %}
+        {
+            id: {{ v.id }},
+            brand: "{{ v.brand|escapejs }}",
+            model: "{{ v.model|default:'N/A'|escapejs }}",
+            year: "{{ v.year|default:'N/A' }}",
+            type: "{{ v.type|title|escapejs }}",
+            number_plate: "{{ v.number_plate|escapejs }}",
+            location: "{{ v.location|escapejs }}",
+            pickup_location: "{{ v.pickup_location|default:'N/A'|escapejs }}",
+            price_per_day: "₹{{ v.price_per_day }}",
+            fuel: "{{ v.fuel|title|escapejs }}",
+            trans: "{{ v.trans|title|escapejs }}",
+            mileage: "{{ v.mileage|default:'N/A' }}",
+            description: "{{ v.description|escapejs|slice:':200' }}{% if v.description|length > 200 %}...{% endif %}",
+            owner_name: "{{ v.owner.name|default:'N/A'|escapejs }}",
+            owner_phone: "{{ v.owner.phone|default:'N/A' }}",
+            owner_email: "{{ v.owner.email|default:'N/A' }}",
+            img1: "{% if v.img1 %}{{ v.img1.url }}{% else %}{% endif %}",
+            img2: "{% if v.img2 %}{{ v.img2.url }}{% else %}{% endif %}",
+            image1: "{% if v.image1 %}{{ v.image1.url }}{% else %}{% endif %}"
+        },
+        {% endfor %}
+    ];
+
+    // ===== OPEN DETAILS MODAL =====
+    function openDetailsModal(index) {
+        const v = vehiclesData[index];
+        if (!v) return;
+
+        const modal = document.getElementById('detailsModal');
+        const body = document.getElementById('detailsModalBody');
+
+        body.innerHTML = `
+            <div class="detail-row"><span>Brand</span><strong>${v.brand}</strong></div>
+            <div class="detail-row"><span>Model</span><strong>${v.model}</strong></div>
+            <div class="detail-row"><span>Year</span><strong>${v.year}</strong></div>
+            <div class="detail-row"><span>Type</span><strong>${v.type}</strong></div>
+            <div class="detail-row"><span>Registration Number</span><strong>${v.number_plate}</strong></div>
+            <div class="detail-row"><span>Location</span><strong>${v.location}</strong></div>
+            <div class="detail-row"><span>Pickup Location</span><strong>${v.pickup_location}</strong></div>
+            <div class="detail-row"><span>Price Per Day</span><strong>${v.price_per_day}</strong></div>
+            <div class="detail-row"><span>Fuel Type</span><strong>${v.fuel}</strong></div>
+            <div class="detail-row"><span>Transmission</span><strong>${v.trans}</strong></div>
+            <div class="detail-row"><span>Mileage</span><strong>${v.mileage} km</strong></div>
+            <div class="detail-row"><span>Description</span><strong>${v.description}</strong></div>
+            <div class="detail-row"><span>Owner Name</span><strong>${v.owner_name}</strong></div>
+            <div class="detail-row"><span>Owner Phone</span><strong>${v.owner_phone}</strong></div>
+            <div class="detail-row"><span>Owner Email</span><strong>${v.owner_email}</strong></div>
+
+            <div class="modal-docs">
+                <div class="doc-item">
+                    ${v.img1 ? `<img src="${v.img1}" onclick="showImage(this.src)" alt="RC Book 1">` : `<div style="height:160px;display:flex;align-items:center;justify-content:center;color:#64748b;font-size:14px;">No RC Book 1</div>`}
+                    <div class="doc-label">RC Book Page 1</div>
+                </div>
+                <div class="doc-item">
+                    ${v.img2 ? `<img src="${v.img2}" onclick="showImage(this.src)" alt="RC Book 2">` : `<div style="height:160px;display:flex;align-items:center;justify-content:center;color:#64748b;font-size:14px;">No RC Book 2</div>`}
+                    <div class="doc-label">RC Book Page 2</div>
+                </div>
+            </div>
+        `;
+
+        modal.style.display = 'flex';
+        document.body.style.overflow = 'hidden';
+    }
+
+    // ===== CLOSE DETAILS MODAL =====
+    function closeDetailsModal() {
+        document.getElementById('detailsModal').style.display = 'none';
+        document.body.style.overflow = '';
+    }
+
+    // ===== IMAGE PREVIEW =====
+    function showImage(src) {
+        document.getElementById('modalImg').src = src;
+        document.getElementById('imgModal').style.display = 'flex';
+        document.body.style.overflow = 'hidden';
+    }
+
+    function closeImageModal() {
+        document.getElementById('imgModal').style.display = 'none';
+        document.body.style.overflow = '';
+    }
+
+    // ===== CLOSE MODALS ON OUTSIDE CLICK =====
+    document.getElementById('detailsModal').addEventListener('click', function(e) {
+        if (e.target === this) closeDetailsModal();
+    });
+
+    document.getElementById('imgModal').addEventListener('click', function(e) {
+        if (e.target === this) closeImageModal();
+    });
+
+    // ===== ESCAPE KEY =====
+    document.addEventListener('keydown', function(e) {
+        if (e.key === 'Escape') {
+            closeDetailsModal();
+            closeImageModal();
+        }
+    });
+</script>
+
+</body>
+</html>

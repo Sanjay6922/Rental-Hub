@@ -1,0 +1,273 @@
+<!DOCTYPE html>
+
+<html>
+
+<head>
+
+    <title>
+
+        Payment Summary
+
+    </title>
+
+    <link
+    rel="stylesheet"
+    href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"
+    >
+
+    <style>
+
+        *{
+
+            margin:0;
+
+            padding:0;
+
+            box-sizing:border-box;
+
+            font-family:Poppins;
+        }
+
+        body{
+
+            background:#0f172a;
+
+            display:flex;
+
+            justify-content:center;
+
+            align-items:center;
+
+            min-height:100vh;
+
+            color:white;
+        }
+
+        .payment-card{
+
+            width:500px;
+
+            background:rgba(
+                255,
+                255,
+                255,
+                0.08
+            );
+
+            padding:40px;
+
+            border-radius:28px;
+
+            backdrop-filter:blur(16px);
+
+            border:1px solid rgba(
+                255,
+                255,
+                255,
+                0.08
+            );
+        }
+
+        .payment-card h1{
+
+            margin-bottom:30px;
+
+            text-align:center;
+        }
+
+        .summary-box{
+
+            background:rgba(
+                255,
+                255,
+                255,
+                0.05
+            );
+
+            padding:18px;
+
+            border-radius:18px;
+
+            margin-bottom:18px;
+
+            display:flex;
+
+            justify-content:space-between;
+        }
+
+        .summary-box span{
+
+            color:#94a3b8;
+        }
+
+        .summary-box strong{
+
+            color:white;
+        }
+
+        .total{
+
+            background:#22c55e20;
+        }
+
+        .pay-btn{
+
+            width:100%;
+
+            margin-top:25px;
+
+            padding:18px;
+
+            border:none;
+
+            border-radius:18px;
+
+            background:linear-gradient(
+                135deg,
+                #2563eb,
+                #3b82f6
+            );
+
+            color:white;
+
+            font-size:18px;
+
+            font-weight:600;
+
+            cursor:pointer;
+
+            transition:0.3s;
+        }
+
+        .pay-btn:hover{
+
+            transform:scale(1.03);
+        }
+
+    </style>
+
+</head>
+
+<body>
+
+<div class="payment-card">
+
+    <h1>
+
+        Payment Summary
+
+    </h1>
+
+   <form
+action="{% url 'pay' booking.total_price booking.id %}"
+method="post">
+
+    {% csrf_token %}
+
+    <div class="summary-box">
+
+        <span>
+
+            Vehicle
+
+        </span>
+
+        <strong>
+
+            {{ booking.vehicle.brand }}
+
+        </strong>
+
+    </div>
+
+    <div class="summary-box">
+
+        <span>
+
+            Pickup Date
+
+        </span>
+
+        <strong>
+
+            {{ booking.pickup_date }}
+
+        </strong>
+
+    </div>
+
+    <div class="summary-box">
+
+        <span>
+
+            Return Date
+
+        </span>
+
+        <strong>
+
+            {{ booking.return_date }}
+
+        </strong>
+
+    </div>
+
+    <div class="summary-box">
+
+        <span>
+
+            Customer
+
+        </span>
+
+        <strong>
+
+            {{ booking.customer_name }}
+
+        </strong>
+
+    </div>
+
+    <div class="summary-box total">
+
+        <span>
+
+            Total Amount
+
+        </span>
+
+        <strong>
+
+            ₹{{ booking.total_price }}
+
+        </strong>
+
+    </div>
+
+    <!-- HIDDEN INPUTS -->
+
+    <input
+    type="hidden"
+    name="amount"
+    value="{{ booking.total_price }}">
+
+    <input
+    type="hidden"
+    name="booking_id"
+    value="{{ booking.id }}">
+
+    <button
+    type="submit"
+    class="pay-btn">
+
+        Pay Now
+
+    </button>
+
+</form>
+
+</div>
+
+</body>
+
+</html>

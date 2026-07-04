@@ -1,0 +1,707 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>RentalHub – Edit Vehicle</title>
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: "Poppins", sans-serif;
+        }
+
+        body {
+            background: #0f172a;
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+        /* ===== BACKGROUND ANIMATION ===== */
+        .bg-animation {
+            position: fixed;
+            width: 100%;
+            height: 100vh;
+            overflow: hidden;
+            z-index: -1;
+        }
+
+        .circle {
+            position: absolute;
+            border-radius: 50%;
+            background: rgba(59, 130, 246, 0.12);
+            animation: float 12s infinite linear;
+        }
+
+        .circle:nth-child(1) {
+            width: 300px;
+            height: 300px;
+            left: -100px;
+            top: 120px;
+        }
+        .circle:nth-child(2) {
+            width: 250px;
+            height: 250px;
+            right: -80px;
+            top: 300px;
+            animation-duration: 15s;
+        }
+        .circle:nth-child(3) {
+            width: 200px;
+            height: 200px;
+            left: 40%;
+            bottom: -60px;
+            animation-duration: 18s;
+        }
+
+        @keyframes float {
+            0% { transform: translateY(0px) rotate(0deg); }
+            50% { transform: translateY(-40px) rotate(180deg); }
+            100% { transform: translateY(0px) rotate(360deg); }
+        }
+
+        /* ===== NAVBAR ===== */
+        .navbar {
+            width: 92%;
+            margin: 20px auto;
+            padding: 18px 35px;
+            border-radius: 24px;
+            background: rgba(255, 255, 255, 0.06);
+            backdrop-filter: blur(14px);
+            border: 1px solid rgba(255, 255, 255, 0.06);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: relative;
+            z-index: 100;
+        }
+
+        .logo {
+            color: white;
+            font-size: 28px;
+            font-weight: 700;
+        }
+        .logo span { color: #3b82f6; }
+
+        .nav-links {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .nav-links a {
+            text-decoration: none;
+            color: #cbd5e1;
+            transition: 0.3s;
+            font-size: 15px;
+            font-weight: 500;
+        }
+
+        .nav-links a:hover { color: white; }
+
+        /* ===== MAIN CONTAINER ===== */
+        .container {
+            width: 92%;
+            max-width: 1200px;
+            margin: 30px auto 60px;
+        }
+
+        /* ===== PAGE HEADER ===== */
+        .page-header {
+            margin-bottom: 30px;
+        }
+
+        .page-header h1 {
+            font-size: 36px;
+            font-weight: 800;
+            color: white;
+        }
+
+        .page-header h1 i {
+            color: #3b82f6;
+            margin-right: 12px;
+        }
+
+        .page-header p {
+            color: #94a3b8;
+            font-size: 17px;
+            margin-top: 6px;
+        }
+
+        /* ===== FORM CARD ===== */
+        .card {
+            background: rgba(255, 255, 255, 0.06);
+            backdrop-filter: blur(14px);
+            border-radius: 28px;
+            padding: 45px 40px;
+            border: 1px solid rgba(255, 255, 255, 0.06);
+            box-shadow: 0 25px 50px rgba(0, 0, 0, 0.25);
+            animation: slideUp 0.6s ease;
+        }
+
+        @keyframes slideUp {
+            from { opacity: 0; transform: translateY(30px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* ===== FORM GRID ===== */
+        .form-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 24px;
+        }
+
+        .input-group {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .input-group label {
+            color: #cbd5e1;
+            font-size: 14px;
+            font-weight: 500;
+            margin-bottom: 6px;
+        }
+
+        .input-group label i {
+            color: #3b82f6;
+            margin-right: 6px;
+        }
+
+        .input-group input,
+        .input-group select,
+        .input-group textarea {
+            width: 100%;
+            padding: 14px 16px;
+            border-radius: 14px;
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            background: rgba(255, 255, 255, 0.04);
+            color: white;
+            font-size: 15px;
+            transition: 0.3s;
+            outline: none;
+        }
+
+        .input-group input::placeholder {
+            color: #64748b;
+        }
+
+        .input-group input:focus,
+        .input-group select:focus,
+        .input-group textarea:focus {
+            border-color: #3b82f6;
+            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.15);
+        }
+
+        .input-group select option {
+            background: #1e293b;
+            color: white;
+        }
+
+        .input-group textarea {
+            resize: vertical;
+            min-height: 120px;
+        }
+
+        .full-width {
+            grid-column: 1 / -1;
+        }
+
+        /* ===== IMAGE SECTION ===== */
+        .image-section-title {
+            color: white;
+            font-size: 22px;
+            font-weight: 700;
+            margin-top: 40px;
+            margin-bottom: 20px;
+        }
+
+        .image-section-title i {
+            color: #3b82f6;
+            margin-right: 10px;
+        }
+
+        .image-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 20px;
+        }
+
+        .image-box {
+            background: rgba(255, 255, 255, 0.04);
+            border: 1px solid rgba(255, 255, 255, 0.06);
+            border-radius: 16px;
+            padding: 16px;
+            text-align: center;
+            transition: 0.3s;
+        }
+
+        .image-box:hover {
+            border-color: rgba(59, 130, 246, 0.3);
+        }
+
+        .image-box img {
+            width: 100%;
+            height: 150px;
+            object-fit: cover;
+            border-radius: 12px;
+            margin-bottom: 12px;
+            background: #1e293b;
+        }
+
+        .image-box .file-label {
+            display: inline-block;
+            padding: 8px 16px;
+            border-radius: 10px;
+            background: rgba(255, 255, 255, 0.06);
+            color: #94a3b8;
+            font-size: 13px;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+
+        .image-box .file-label:hover {
+            background: rgba(59, 130, 246, 0.2);
+            color: white;
+        }
+
+        .image-box input[type="file"] {
+            display: none;
+        }
+
+        .image-box .file-name {
+            color: #64748b;
+            font-size: 12px;
+            margin-top: 6px;
+            display: block;
+        }
+
+        /* ===== BUTTONS ===== */
+        .button-group {
+            display: flex;
+            gap: 16px;
+            margin-top: 40px;
+            flex-wrap: wrap;
+        }
+
+        .save-btn {
+            padding: 16px 40px;
+            border: none;
+            border-radius: 16px;
+            background: linear-gradient(135deg, #2563eb, #3b82f6);
+            color: white;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: 0.4s;
+            box-shadow: 0 10px 25px rgba(37, 99, 235, 0.35);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .save-btn:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 15px 40px rgba(37, 99, 235, 0.45);
+        }
+
+        .cancel-btn {
+            padding: 16px 36px;
+            border-radius: 16px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            background: rgba(255, 255, 255, 0.04);
+            color: #cbd5e1;
+            font-size: 16px;
+            font-weight: 500;
+            cursor: pointer;
+            text-decoration: none;
+            transition: 0.3s;
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .cancel-btn:hover {
+            background: rgba(255, 255, 255, 0.1);
+            color: white;
+            transform: translateY(-2px);
+        }
+
+        /* ===== SUCCESS MODAL ===== */
+        .modal {
+            position: fixed;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.65);
+            backdrop-filter: blur(6px);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 9999;
+        }
+
+        .modal-content {
+            background: rgba(255, 255, 255, 0.06);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            width: 400px;
+            padding: 45px 35px 35px;
+            border-radius: 24px;
+            text-align: center;
+            animation: pop 0.4s ease;
+        }
+
+        @keyframes pop {
+            from { transform: scale(0.7); opacity: 0; }
+            to { transform: scale(1); opacity: 1; }
+        }
+
+        .modal-content i {
+            font-size: 72px;
+            color: #22c55e;
+            margin-bottom: 16px;
+        }
+
+        .modal-content h2 {
+            color: white;
+            font-size: 28px;
+            font-weight: 700;
+            margin-bottom: 8px;
+        }
+
+        .modal-content p {
+            color: #94a3b8;
+            font-size: 16px;
+            margin-bottom: 28px;
+        }
+
+        .modal-content .modal-btn {
+            padding: 14px 40px;
+            border: none;
+            border-radius: 14px;
+            background: linear-gradient(135deg, #2563eb, #3b82f6);
+            color: white;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: 0.3s;
+            box-shadow: 0 10px 25px rgba(37, 99, 235, 0.3);
+        }
+
+        .modal-content .modal-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 15px 35px rgba(37, 99, 235, 0.4);
+        }
+
+        /* ===== RESPONSIVE ===== */
+        @media (max-width: 992px) {
+            .form-grid {
+                grid-template-columns: 1fr;
+            }
+            .image-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+            .navbar {
+                flex-direction: column;
+                gap: 14px;
+                padding: 16px 20px;
+            }
+            .nav-links {
+                flex-wrap: wrap;
+                justify-content: center;
+                gap: 12px;
+            }
+        }
+
+        @media (max-width: 600px) {
+            .container {
+                width: 96%;
+            }
+            .card {
+                padding: 24px 18px;
+            }
+            .image-grid {
+                grid-template-columns: 1fr;
+            }
+            .button-group {
+                flex-direction: column;
+            }
+            .save-btn, .cancel-btn {
+                width: 100%;
+                justify-content: center;
+            }
+            .page-header h1 {
+                font-size: 28px;
+            }
+            .modal-content {
+                width: 90%;
+                padding: 30px 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- ===== BACKGROUND ===== -->
+    <div class="bg-animation">
+        <div class="circle"></div>
+        <div class="circle"></div>
+        <div class="circle"></div>
+    </div>
+
+    <!-- ===== NAVBAR ===== -->
+    <div class="navbar">
+        <div class="logo">Rental<span>Hub</span></div>
+        <div class="nav-links">
+            <a href="/home"><i class="fa-solid fa-house"></i> Home</a>
+            <a href="{% url 'vehicle_list' %}"><i class="fa-solid fa-car"></i> Vehicles</a>
+            <a href="{% url 'profile' %}"><i class="fa-solid fa-user"></i> Profile</a>
+        </div>
+    </div>
+
+    <!-- ===== MAIN CONTAINER ===== -->
+    <div class="container">
+
+        <!-- ===== PAGE HEADER ===== -->
+        <div class="page-header">
+            <h1><i class="fa-solid fa-pen-to-square"></i> Edit Vehicle</h1>
+            <p>Update your vehicle details, pricing and images.</p>
+        </div>
+
+        <!-- ===== FORM CARD ===== -->
+        <div class="card">
+
+            <form method="POST" enctype="multipart/form-data" action="../../vehicle-update/{{ data.id }}/">
+
+                {% csrf_token %}
+
+                <div class="form-grid">
+
+                    <!-- Vehicle Name -->
+                    <div class="input-group">
+                        <label><i class="fa-solid fa-car"></i> Vehicle Name</label>
+                        <input type="text" name="number_plate" value="{{ data.number_plate }}" placeholder="Enter vehicle name">
+                    </div>
+
+                    <!-- Brand -->
+                    <div class="input-group">
+                        <label><i class="fa-solid fa-tag"></i> Brand</label>
+                        <input type="text" name="brand" value="{{ data.brand }}" placeholder="Enter brand name">
+                    </div>
+
+                    <!-- Year -->
+                    <div class="input-group">
+                        <label><i class="fa-solid fa-calendar"></i> Model Year</label>
+                        <input type="number" name="year" value="{{ data.year }}" placeholder="Enter year">
+                    </div>
+
+                    <!-- Type -->
+                    <div class="input-group">
+                        <label><i class="fa-solid fa-arrow-right"></i> Vehicle Type</label>
+                        <select name="type">
+                            <option value="car" {% if data.type == 'car' %}selected{% endif %}>Car</option>
+                            <option value="bike" {% if data.type == 'bike' %}selected{% endif %}>Bike</option>
+                            <option value="auto" {% if data.type == 'auto' %}selected{% endif %}>Auto</option>
+                        </select>
+                    </div>
+
+                    <!-- Registration -->
+                    <div class="input-group">
+                        <label><i class="fa-solid fa-id-card"></i> Registration Number</label>
+                        <input type="text" name="reg_no" value="{{ data.reg_no }}" placeholder="Enter registration number">
+                    </div>
+
+                    <!-- Location -->
+                    <div class="input-group">
+                        <label><i class="fa-solid fa-location-dot"></i> Location</label>
+                        <input type="text" name="location" value="{{ data.location }}" placeholder="Enter city/location">
+                    </div>
+
+                    <!-- Pickup -->
+                    <div class="input-group">
+                        <label><i class="fa-solid fa-map-pin"></i> Pickup Location</label>
+                        <input type="text" name="pickup_location" value="{{ data.pickup_location }}" placeholder="Enter pickup address">
+                    </div>
+
+                    <!-- Mileage -->
+                    <div class="input-group">
+                        <label><i class="fa-solid fa-road"></i> Mileage</label>
+                        <input type="number" name="mileage" value="{{ data.mileage }}" placeholder="Enter mileage (km/l)">
+                    </div>
+
+                    <!-- Price Day -->
+                    <div class="input-group">
+                        <label><i class="fa-solid fa-indian-rupee-sign"></i> Price Per Day</label>
+                        <input type="number" name="price_per_day" value="{{ data.price_per_day }}" placeholder="Enter daily price">
+                    </div>
+
+                    <!-- Price Week -->
+                    <div class="input-group">
+                        <label><i class="fa-solid fa-indian-rupee-sign"></i> Price Per Week</label>
+                        <input type="number" name="price_per_week" value="{{ data.price_per_week }}" placeholder="Enter weekly price">
+                    </div>
+
+                    <!-- Price Month -->
+                    <div class="input-group">
+                        <label><i class="fa-solid fa-indian-rupee-sign"></i> Price Per Month</label>
+                        <input type="number" name="price_per_month" value="{{ data.price_per_month }}" placeholder="Enter monthly price">
+                    </div>
+
+                    <!-- Fuel -->
+                    <div class="input-group">
+                        <label><i class="fa-solid fa-gas-pump"></i> Fuel Type</label>
+                        <select name="fuel">
+                            <option value="petrol" {% if data.fuel == 'petrol' %}selected{% endif %}>Petrol</option>
+                            <option value="diesel" {% if data.fuel == 'diesel' %}selected{% endif %}>Diesel</option>
+                        </select>
+                    </div>
+
+                    <!-- Transmission -->
+                    <div class="input-group">
+                        <label><i class="fa-solid fa-gear"></i> Transmission</label>
+                        <select name="trans">
+                            <option value="manual" {% if data.trans == 'manual' %}selected{% endif %}>Manual</option>
+                            <option value="automatic" {% if data.trans == 'automatic' %}selected{% endif %}>Automatic</option>
+                        </select>
+                    </div>
+
+                    <!-- Description -->
+                    <div class="input-group full-width">
+                        <label><i class="fa-solid fa-align-left"></i> Description</label>
+                        <textarea name="description" placeholder="Enter vehicle description">{{ data.description }}</textarea>
+                    </div>
+
+                </div>
+
+                <!-- ===== IMAGES SECTION ===== -->
+                <div class="image-section-title">
+                    <i class="fa-solid fa-images"></i> Vehicle Images
+                </div>
+
+                <div class="image-grid">
+
+                    <!-- Image 1 -->
+                    <div class="image-box">
+                        {% if data.image1 %}
+                        <img src="{{ data.image1.url }}" alt="Image 1">
+                        {% else %}
+                        <img src="{% static 'images/default-car.jpg' %}" alt="No image" style="opacity:0.4;">
+                        {% endif %}
+                        <label class="file-label" for="image1">
+                            <i class="fa-solid fa-upload"></i> Upload Image 1
+                        </label>
+                        <input type="file" name="image1" id="image1" accept="image/*">
+                        <span class="file-name" id="file1-name">No file selected</span>
+                    </div>
+
+                    <!-- Image 2 -->
+                    <div class="image-box">
+                        {% if data.image2 %}
+                        <img src="{{ data.image2.url }}" alt="Image 2">
+                        {% else %}
+                        <img src="{% static 'images/default-car.jpg' %}" alt="No image" style="opacity:0.4;">
+                        {% endif %}
+                        <label class="file-label" for="image2">
+                            <i class="fa-solid fa-upload"></i> Upload Image 2
+                        </label>
+                        <input type="file" name="image2" id="image2" accept="image/*">
+                        <span class="file-name" id="file2-name">No file selected</span>
+                    </div>
+
+                    <!-- Image 3 -->
+                    <div class="image-box">
+                        {% if data.image3 %}
+                        <img src="{{ data.image3.url }}" alt="Image 3">
+                        {% else %}
+                        <img src="{% static 'images/default-car.jpg' %}" alt="No image" style="opacity:0.4;">
+                        {% endif %}
+                        <label class="file-label" for="image3">
+                            <i class="fa-solid fa-upload"></i> Upload Image 3
+                        </label>
+                        <input type="file" name="image3" id="image3" accept="image/*">
+                        <span class="file-name" id="file3-name">No file selected</span>
+                    </div>
+
+                    <!-- Image 4 -->
+                    <div class="image-box">
+                        {% if data.image4 %}
+                        <img src="{{ data.image4.url }}" alt="Image 4">
+                        {% else %}
+                        <img src="{% static 'images/default-car.jpg' %}" alt="No image" style="opacity:0.4;">
+                        {% endif %}
+                        <label class="file-label" for="image4">
+                            <i class="fa-solid fa-upload"></i> Upload Image 4
+                        </label>
+                        <input type="file" name="image4" id="image4" accept="image/*">
+                        <span class="file-name" id="file4-name">No file selected</span>
+                    </div>
+
+                </div>
+
+                <!-- ===== BUTTONS ===== -->
+                <div class="button-group">
+                    <button type="submit" class="save-btn">
+                        <i class="fa-solid fa-floppy-disk"></i> Save Changes
+                    </button>
+                    <a href="{% url 'profile' %}" class="cancel-btn">
+                        <i class="fa-solid fa-xmark"></i> Cancel
+                    </a>
+                </div>
+
+            </form>
+
+        </div>
+    </div>
+
+    <!-- ===== SUCCESS MODAL ===== -->
+    {% if request.GET.updated %}
+    <div id="successModal" class="modal">
+        <div class="modal-content">
+            <i class="fa-solid fa-circle-check"></i>
+            <h2>Success!</h2>
+            <p>Vehicle updated successfully.</p>
+            <button class="modal-btn" onclick="closeModal()">
+                <i class="fa-solid fa-check"></i> OK
+            </button>
+        </div>
+    </div>
+    {% endif %}
+
+    <!-- ===== SCRIPTS ===== -->
+    <script>
+        // File name display for each image input
+        document.querySelectorAll('.image-box input[type="file"]').forEach(input => {
+            input.addEventListener('change', function() {
+                const fileName = this.files[0] ? this.files[0].name : 'No file selected';
+                const span = this.parentElement.querySelector('.file-name');
+                if (span) span.textContent = fileName;
+            });
+        });
+
+        // Close modal and remove ?updated=1 from URL
+        function closeModal() {
+            document.getElementById("successModal").style.display = "none";
+            window.history.replaceState({}, document.title, window.location.pathname);
+        }
+
+        // Close modal on outside click
+        document.addEventListener('click', function(e) {
+            const modal = document.getElementById('successModal');
+            if (modal && e.target === modal) {
+                closeModal();
+            }
+        });
+    </script>
+
+</body>
+</html>

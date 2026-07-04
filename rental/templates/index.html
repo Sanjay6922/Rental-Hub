@@ -1,0 +1,764 @@
+{% load static %}
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>RentalHub – Sign In / Sign Up</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800;900&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"
+    />
+
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+        font-family: "Poppins", sans-serif;
+      }
+
+      body {
+        background: #0f172a;
+        color: white;
+        min-height: 100vh;
+        overflow-x: hidden;
+      }
+
+      /* ===== BACKGROUND ANIMATION ===== */
+      .bg-animation {
+        position: fixed;
+        width: 100%;
+        height: 100vh;
+        overflow: hidden;
+        z-index: -1;
+      }
+
+      .circle {
+        position: absolute;
+        border-radius: 50%;
+        background: rgba(59, 130, 246, 0.12);
+        animation: float 12s infinite linear;
+      }
+
+      .circle:nth-child(1) {
+        width: 300px;
+        height: 300px;
+        left: -100px;
+        top: 120px;
+      }
+      .circle:nth-child(2) {
+        width: 250px;
+        height: 250px;
+        right: -80px;
+        top: 300px;
+        animation-duration: 15s;
+      }
+      .circle:nth-child(3) {
+        width: 200px;
+        height: 200px;
+        left: 40%;
+        bottom: -60px;
+        animation-duration: 18s;
+      }
+
+      @keyframes float {
+        0% {
+          transform: translateY(0px) rotate(0deg);
+        }
+        50% {
+          transform: translateY(-40px) rotate(180deg);
+        }
+        100% {
+          transform: translateY(0px) rotate(360deg);
+        }
+      }
+
+      /* ===== MAIN LAYOUT ===== */
+      .auth-container {
+        width: 92%;
+        max-width: 1200px;
+        display: flex;
+        align-items: center;
+        gap: 60px;
+        margin: 40px auto 60px;
+        min-height: 80vh;
+      }
+
+      /* ===== BRANDING SIDE ===== */
+      .auth-branding {
+        flex: 1;
+        padding: 20px 0;
+      }
+
+      .auth-branding .logo {
+        font-size: 34px;
+        font-weight: 700;
+        margin-bottom: 30px;
+      }
+      .auth-branding .logo span {
+        color: #3b82f6;
+      }
+
+      .auth-branding h1 {
+        font-size: 52px;
+        font-weight: 800;
+        line-height: 1.1;
+        margin-bottom: 20px;
+      }
+      .auth-branding h1 span {
+        color: #60a5fa;
+      }
+
+      .auth-branding p {
+        color: #cbd5e1;
+        font-size: 18px;
+        line-height: 1.7;
+        max-width: 450px;
+        margin-bottom: 40px;
+      }
+
+      .branding-features {
+        display: flex;
+        flex-direction: column;
+        gap: 16px;
+      }
+
+      .branding-features .feature-item {
+        display: flex;
+        align-items: center;
+        gap: 14px;
+        color: #cbd5e1;
+      }
+
+      .branding-features .feature-item i {
+        color: #3b82f6;
+        font-size: 20px;
+        width: 28px;
+      }
+
+      /* ===== AUTH CARD ===== */
+      .auth-card {
+        flex: 1;
+        max-width: 480px;
+        background: rgba(255, 255, 255, 0.06);
+        backdrop-filter: blur(14px);
+        border-radius: 28px;
+        padding: 45px 40px;
+        border: 1px solid rgba(255, 255, 255, 0.06);
+        box-shadow: 0 25px 50px rgba(0, 0, 0, 0.3);
+        animation: slideUp 0.8s ease;
+      }
+
+      @keyframes slideUp {
+        from {
+          opacity: 0;
+          transform: translateY(40px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0px);
+        }
+      }
+
+      .auth-toggle {
+        display: flex;
+        background: rgba(255, 255, 255, 0.04);
+        border-radius: 16px;
+        padding: 5px;
+        margin-bottom: 30px;
+        border: 1px solid rgba(255, 255, 255, 0.04);
+      }
+
+      .auth-toggle button {
+        flex: 1;
+        padding: 12px;
+        background: transparent;
+        border: none;
+        color: #94a3b8;
+        font-weight: 600;
+        font-size: 15px;
+        border-radius: 12px;
+        cursor: pointer;
+        transition: 0.3s;
+      }
+
+      .auth-toggle button.active {
+        background: linear-gradient(135deg, #2563eb, #3b82f6);
+        color: white;
+        box-shadow: 0 8px 20px rgba(37, 99, 235, 0.35);
+      }
+
+      .auth-toggle button:hover:not(.active) {
+        color: white;
+      }
+
+      .auth-form {
+        display: flex;
+        flex-direction: column;
+        gap: 4px;
+      }
+
+      .auth-form .form-group {
+        margin-bottom: 6px;
+      }
+
+      .auth-form label {
+        font-size: 14px;
+        font-weight: 500;
+        color: #cbd5e1;
+        margin-bottom: 4px;
+        display: block;
+      }
+
+      .auth-form input {
+        width: 100%;
+        padding: 16px 18px;
+        border-radius: 14px;
+        border: 1px solid rgba(255, 255, 255, 0.06);
+        background: rgba(255, 255, 255, 0.04);
+        color: white;
+        font-size: 15px;
+        transition: 0.3s;
+        outline: none;
+      }
+
+      .auth-form input:focus {
+        border-color: #3b82f6;
+        box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.15);
+      }
+
+      .auth-form input::placeholder {
+        color: #64748b;
+      }
+
+      .auth-form .forgot-link {
+        text-align: right;
+        font-size: 14px;
+        color: #94a3b8;
+        text-decoration: none;
+        margin: 6px 0 16px;
+        transition: 0.3s;
+      }
+
+      .auth-form .forgot-link:hover {
+        color: #60a5fa;
+      }
+
+      .auth-btn {
+        width: 100%;
+        padding: 16px;
+        background: linear-gradient(135deg, #2563eb, #3b82f6);
+        border: none;
+        border-radius: 14px;
+        color: white;
+        font-weight: 600;
+        font-size: 17px;
+        cursor: pointer;
+        transition: 0.3s;
+        box-shadow: 0 10px 25px rgba(37, 99, 235, 0.3);
+        margin-top: 8px;
+      }
+
+      .auth-btn:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 15px 35px rgba(37, 99, 235, 0.4);
+      }
+
+      .auth-divider {
+        display: flex;
+        align-items: center;
+        gap: 16px;
+        margin: 24px 0 16px;
+        color: #64748b;
+        font-size: 14px;
+      }
+
+      .auth-divider::before,
+      .auth-divider::after {
+        content: "";
+        flex: 1;
+        height: 1px;
+        background: rgba(255, 255, 255, 0.06);
+      }
+
+      .auth-footer-text {
+        text-align: center;
+        color: #94a3b8;
+        font-size: 15px;
+      }
+
+      .auth-footer-text a {
+        color: #60a5fa;
+        text-decoration: none;
+        font-weight: 600;
+      }
+
+      .auth-footer-text a:hover {
+        text-decoration: underline;
+      }
+
+      /* ===== REVIEWS SECTION ===== */
+      .reviews-section {
+        width: 92%;
+        max-width: 1200px;
+        margin: 0 auto 60px;
+      }
+
+      .reviews-section .section-header {
+        text-align: center;
+        margin-bottom: 40px;
+      }
+
+      .reviews-section .section-header h2 {
+        font-size: 36px;
+        font-weight: 700;
+        color: white;
+      }
+
+      .reviews-section .section-header p {
+        color: #94a3b8;
+        font-size: 17px;
+        margin-top: 6px;
+      }
+
+      .reviews-grid {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 30px;
+      }
+
+      .review-card {
+        background: rgba(255, 255, 255, 0.06);
+        backdrop-filter: blur(14px);
+        border-radius: 24px;
+        padding: 30px 28px;
+        border: 1px solid rgba(255, 255, 255, 0.06);
+        transition: 0.3s;
+      }
+
+      .review-card:hover {
+        transform: translateY(-6px);
+        box-shadow: 0 20px 40px rgba(0, 0, 0, 0.25);
+        border-color: rgba(59, 130, 246, 0.2);
+      }
+
+      .review-stars {
+        color: #f59e0b;
+        font-size: 16px;
+        margin-bottom: 12px;
+        letter-spacing: 2px;
+      }
+
+      .review-card blockquote {
+        color: #cbd5e1;
+        font-size: 15px;
+        line-height: 1.7;
+        font-style: italic;
+        margin-bottom: 18px;
+      }
+
+      .review-author {
+        display: flex;
+        align-items: center;
+        gap: 14px;
+      }
+
+      .review-author img {
+        width: 48px;
+        height: 48px;
+        border-radius: 50%;
+        object-fit: cover;
+        border: 2px solid rgba(59, 130, 246, 0.3);
+      }
+
+      .review-author .name {
+        font-weight: 600;
+        color: white;
+        font-size: 16px;
+      }
+
+      .review-author .role {
+        font-size: 13px;
+        color: #94a3b8;
+      }
+
+      /* ===== RESPONSIVE ===== */
+      @media (max-width: 992px) {
+        .auth-container {
+          flex-direction: column;
+          gap: 40px;
+          text-align: center;
+        }
+
+        .auth-branding h1 {
+          font-size: 40px;
+        }
+
+        .auth-branding p {
+          max-width: 100%;
+          margin-left: auto;
+          margin-right: auto;
+        }
+
+        .branding-features {
+          align-items: center;
+        }
+
+        .auth-card {
+          max-width: 100%;
+          width: 100%;
+          padding: 35px 30px;
+        }
+
+        .reviews-grid {
+          grid-template-columns: 1fr 1fr;
+        }
+      }
+
+      @media (max-width: 768px) {
+        .reviews-grid {
+          grid-template-columns: 1fr;
+        }
+      }
+
+      @media (max-width: 480px) {
+        .auth-branding h1 {
+          font-size: 32px;
+        }
+
+        .auth-card {
+          padding: 25px 20px;
+        }
+
+        .auth-toggle button {
+          font-size: 14px;
+          padding: 10px;
+        }
+      }
+      .alert-error{
+    background: rgba(239,68,68,0.15);
+    border: 1px solid rgba(239,68,68,0.4);
+    color: #fecaca;
+    padding: 12px;
+    border-radius: 10px;
+    margin-bottom: 15px;
+    text-align: center;
+    font-size: 14px;
+}
+
+.alert-success{
+    background: rgba(34,197,94,0.15);
+    border: 1px solid rgba(34,197,94,0.4);
+    color: #bbf7d0;
+    padding: 12px;
+    border-radius: 10px;
+    margin-bottom: 15px;
+    text-align: center;
+    font-size: 14px;
+}
+/* reviews sliding */
+
+.review-slider{
+    width:100%;
+    overflow:hidden;
+    padding:20px 0;
+}
+
+.review-track{
+    display:flex;
+    width:max-content;
+    animation:scrollReviews 25s linear infinite;
+}
+
+.review-track:hover{
+    animation-play-state:paused;
+}
+
+.review-card{
+    width:350px;
+    margin:0 20px;
+    background:rgba(255,255,255,.06);
+    backdrop-filter:blur(10px);
+    border-radius:20px;
+    padding:25px;
+    flex-shrink:0;
+}
+
+.review-author{
+    display:flex;
+    align-items:center;
+    gap:12px;
+    margin-top:20px;
+}
+
+.review-author img{
+    width:55px;
+    height:55px;
+    border-radius:50%;
+    object-fit:cover;
+}
+
+.review-stars{
+    color:#fbbf24;
+    margin-bottom:15px;
+}
+
+@keyframes scrollReviews{
+
+    from{
+        transform:translateX(0);
+    }
+
+    to{
+        transform:translateX(-50%);
+    }
+
+}
+    </style>
+  </head>
+  <body>
+    <!-- ===== BACKGROUND ANIMATION ===== -->
+    <div class="bg-animation">
+      <div class="circle"></div>
+      <div class="circle"></div>
+      <div class="circle"></div>
+    </div>
+
+    <!-- ===== AUTH CONTAINER ===== -->
+    <div class="auth-container">
+      <!-- ===== LEFT: BRANDING ===== -->
+      <div class="auth-branding">
+        <div class="logo">Rental<span>Hub</span></div>
+        <h1>Drive into the<br /><span>Future</span></h1>
+        <p>
+          Rent premium vehicles with ease. Secure, fast, and fully verified —
+          all in one platform.
+        </p>
+
+        <div class="branding-features">
+          <div class="feature-item">
+            <i class="fa-solid fa-car"></i>
+            <span>500+ premium vehicles</span>
+          </div>
+          <div class="feature-item">
+            <i class="fa-solid fa-shield-alt"></i>
+            <span>Fully insured & verified</span>
+          </div>
+          <div class="feature-item">
+            <i class="fa-solid fa-clock"></i>
+            <span>Instant booking, 24/7 support</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- ===== RIGHT: AUTH CARD ===== -->
+      <div class="auth-card">
+        <!-- Toggle Buttons -->
+        <div class="auth-toggle">
+          <button class="active" id="toggle-signin">Sign In</button>
+          <button id="toggle-signup">Sign Up</button>
+        </div>
+        {% if error %}
+        <div class="alert-error">{{ error }}</div>
+        {% endif %} {% if success %}
+        <div class="alert-success">{{ success }}</div>
+        {% endif %}
+
+        <!-- ===== SIGN IN FORM ===== -->
+        <form
+          class="auth-form"
+          id="signin-form"
+          method="POST"
+          action="log"
+        >
+          {% csrf_token %}
+          <div class="form-group">
+            <label>UserName</label>
+            <input
+              type="text"
+              name="email"
+              placeholder="you@example.com"
+              required
+            />
+          </div>
+          <div class="form-group">
+            <label>Password</label>
+            <input
+              type="password"
+              name="password"
+              placeholder="Enter your password"
+              required
+            />
+          </div>
+          <a href="forgot-password" class="forgot-link">Forgot Password?</a>
+          <button type="submit" class="auth-btn">Sign In</button>
+
+          <div class="auth-divider">or</div>
+
+          <p class="auth-footer-text">
+            Don’t have an account?
+            <a href="" id="switch-to-signup">Sign Up</a>
+          </p>
+        </form>
+
+        <!-- ===== SIGN UP FORM ===== -->
+        <form
+          class="auth-form"
+          id="signup-form"
+          method="POST"
+          action="register_user"
+          style="display: none"
+        >
+          {% csrf_token %}
+          <div class="form-group">
+            <label>Name</label>
+            <input type="text" name="name" placeholder="John Doe" required />
+          </div>
+          <div class="form-group">
+            <label>Email Address</label>
+            <input
+              type="email"
+              name="email"
+              placeholder="you@example.com"
+              required
+            />
+          </div>
+          <div class="form-group">
+            <label>Password</label>
+            <input
+              type="password"
+              name="password"
+              placeholder="Create a password"
+              required
+            />
+          </div>
+          <div class="form-group">
+            <label>Confirm Password</label>
+            <input
+              type="password"
+              name="confirm_password"
+              placeholder="Confirm your password"
+              required
+            />
+          </div>
+          <button type="submit" class="auth-btn">Create Account</button>
+
+          <div class="auth-divider">or</div>
+
+          <p class="auth-footer-text">
+            Already have an account?
+            <a href="#" id="switch-to-signin">Sign In</a>
+          </p>
+        </form>
+      </div>
+    </div>
+
+    <!-- ===== REVIEWS SECTION ===== -->
+   <div class="review-slider">
+
+    <div class="review-track">
+
+        {% for review in reviews %}
+        <div class="review-card">
+
+            <div class="review-stars">
+                {% for i in "12345" %}
+                    {% if forloop.counter <= review.rating %}
+                        <i class="fa-solid fa-star"></i>
+                    {% endif %}
+                {% endfor %}
+            </div>
+
+            <blockquote>"{{ review.comment }}"</blockquote>
+
+            <div class="review-author">
+
+                <img src="{% static 'images/person1.png' %}" alt="User">
+
+                <div>
+                    <div class="name">{{ review.user }}</div>
+                    <div class="role">Customer</div>
+                </div>
+
+            </div>
+
+        </div>
+        {% endfor %}
+
+        <!-- duplicate for infinite animation -->
+
+        <!-- {% for review in reviews %}
+        <div class="review-card">
+
+            <div class="review-stars">
+                {% for i in "12345" %}
+                    {% if forloop.counter <= review.rating %}
+                        <i class="fa-solid fa-star"></i>
+                    {% endif %}
+                {% endfor %}
+            </div>
+
+            <blockquote>"{{ review.comment }}"</blockquote>
+
+            <div class="review-author">
+
+                <img src="{% static 'images/person1.png' %}" alt="User">
+
+                <div>
+                    <div class="name">{{ review.user }}</div>
+                    <div class="role">Customer</div>
+                </div>
+
+            </div>
+
+        </div>
+        {% endfor %} -->
+
+    </div>
+
+</div>
+
+    <!-- ===== TOGGLE SCRIPT ===== -->
+    <script>
+      const signinForm = document.getElementById("signin-form");
+      const signupForm = document.getElementById("signup-form");
+      const toggleSignin = document.getElementById("toggle-signin");
+      const toggleSignup = document.getElementById("toggle-signup");
+      const switchToSignup = document.getElementById("switch-to-signup");
+      const switchToSignin = document.getElementById("switch-to-signin");
+
+      function showSignin() {
+        signinForm.style.display = "block";
+        signupForm.style.display = "none";
+        toggleSignin.classList.add("active");
+        toggleSignup.classList.remove("active");
+      }
+
+      function showSignup() {
+        signinForm.style.display = "none";
+        signupForm.style.display = "block";
+        toggleSignup.classList.add("active");
+        toggleSignin.classList.remove("active");
+      }
+
+      toggleSignin.addEventListener("click", showSignin);
+      toggleSignup.addEventListener("click", showSignup);
+      switchToSignup.addEventListener("click", function (e) {
+        e.preventDefault();
+        showSignup();
+      });
+      switchToSignin.addEventListener("click", function (e) {
+        e.preventDefault();
+        showSignin();
+      });
+    </script>
+  </body>
+</html>

@@ -1,0 +1,884 @@
+{% load static %}
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>RentalHub – Add Vehicle</title>
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet" />
+
+    <style>
+        :root {
+            --primary: #3b82f6;
+            --primary-dark: #2563eb;
+            --bg: #020617;
+            --card: rgba(255, 255, 255, 0.06);
+            --border: rgba(255, 255, 255, 0.06);
+            --text: #ffffff;
+            --muted: #94a3b8;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: "Poppins", sans-serif;
+        }
+
+        body {
+            background: linear-gradient(135deg, #020617, #0f172a);
+            color: white;
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+        /* ===== BACKGROUND ===== */
+        .bg {
+            position: fixed;
+            inset: 0;
+            overflow: hidden;
+            z-index: -1;
+        }
+
+        .circle {
+            position: absolute;
+            border-radius: 50%;
+            background: rgba(59, 130, 246, 0.08);
+            animation: float 14s linear infinite;
+        }
+
+        .circle:nth-child(1) {
+            width: 260px;
+            height: 260px;
+            left: -100px;
+            top: 120px;
+        }
+
+        .circle:nth-child(2) {
+            width: 180px;
+            height: 180px;
+            right: -60px;
+            top: 45%;
+        }
+
+        @keyframes float {
+            0% { transform: translateY(0px) rotate(0deg); }
+            50% { transform: translateY(-40px) rotate(180deg); }
+            100% { transform: translateY(0px) rotate(360deg); }
+        }
+
+        /* ===== WRAPPER ===== */
+        .wrapper {
+            width: min(92%, 1400px);
+            margin: 40px auto 60px;
+            display: grid;
+            grid-template-columns: 300px 1fr;
+            gap: 35px;
+            align-items: start;
+        }
+
+        /* ===== SIDEBAR ===== */
+        .sidebar {
+            background: var(--card);
+            backdrop-filter: blur(18px);
+            border: 1px solid var(--border);
+            border-radius: 28px;
+            padding: 30px 25px;
+            position: sticky;
+            top: 30px;
+        }
+
+        .logo {
+            font-size: 30px;
+            font-weight: 700;
+            margin-bottom: 35px;
+        }
+
+        .logo span {
+            color: var(--primary);
+        }
+
+        .steps {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            list-style: none;
+        }
+
+        .steps li {
+            padding: 14px 18px;
+            border-radius: 16px;
+            color: #cbd5e1;
+            transition: 0.3s;
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            font-size: 14px;
+            font-weight: 500;
+            cursor: pointer;
+        }
+
+        .steps li i {
+            width: 20px;
+            color: #64748b;
+            transition: 0.3s;
+        }
+
+        .steps li.active {
+            background: linear-gradient(135deg, var(--primary-dark), var(--primary));
+            color: white;
+            box-shadow: 0 10px 25px rgba(37, 99, 235, 0.3);
+        }
+
+        .steps li.active i {
+            color: white;
+        }
+
+        .steps li:hover:not(.active) {
+            background: rgba(255, 255, 255, 0.04);
+        }
+
+        .step-count {
+            font-size: 11px;
+            color: #64748b;
+            margin-left: auto;
+            font-weight: 400;
+        }
+
+        .steps li.active .step-count {
+            color: rgba(255, 255, 255, 0.6);
+        }
+
+        /* ===== CONTENT ===== */
+        .content {
+            background: var(--card);
+            backdrop-filter: blur(18px);
+            border: 1px solid var(--border);
+            border-radius: 28px;
+            padding: 40px 45px;
+        }
+
+        .top {
+            margin-bottom: 30px;
+        }
+
+        .top h1 {
+            font-size: 38px;
+            font-weight: 800;
+            margin-bottom: 6px;
+        }
+
+        .top p {
+            color: var(--muted);
+            font-size: 16px;
+        }
+
+        /* ===== PROGRESS ===== */
+        .progress {
+            width: 100%;
+            height: 8px;
+            background: rgba(255, 255, 255, 0.06);
+            border-radius: 20px;
+            overflow: hidden;
+            margin-bottom: 35px;
+        }
+
+        .progress-bar {
+            height: 100%;
+            width: 11%;
+            background: linear-gradient(135deg, var(--primary-dark), var(--primary));
+            transition: 0.5s ease;
+            border-radius: 20px;
+        }
+
+        /* ===== STEPS ===== */
+        .step {
+            display: none;
+            animation: fade 0.4s ease;
+        }
+
+        .step.active {
+            display: block;
+        }
+
+        @keyframes fade {
+            from { opacity: 0; transform: translateY(15px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* ===== CARD ===== */
+        .card {
+            background: rgba(255, 255, 255, 0.03);
+            border-radius: 24px;
+            padding: 30px 32px;
+            border: 1px solid var(--border);
+        }
+
+        .card h2 {
+            font-size: 24px;
+            font-weight: 700;
+            margin-bottom: 22px;
+        }
+
+        /* ===== INPUTS ===== */
+        .row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+        }
+
+        .input-group {
+            margin-bottom: 18px;
+        }
+
+        .input-group label {
+            display: block;
+            margin-bottom: 8px;
+            color: #cbd5e1;
+            font-size: 13px;
+            font-weight: 500;
+        }
+
+        .input-group label i {
+            color: var(--primary);
+            margin-right: 6px;
+        }
+
+        input, select, textarea {
+            width: 100%;
+            height: 54px;
+            border: none;
+            outline: none;
+            border-radius: 16px;
+            padding: 0 18px;
+            background: rgba(255, 255, 255, 0.04);
+            color: white;
+            border: 1px solid rgba(255, 255, 255, 0.06);
+            transition: 0.3s;
+            font-size: 15px;
+        }
+
+        textarea {
+            height: 160px;
+            padding-top: 16px;
+            resize: vertical;
+        }
+
+        input:focus, select:focus, textarea:focus {
+            border-color: var(--primary);
+            box-shadow: 0 0 0 4px rgba(59, 130, 246, 0.1);
+        }
+
+        input::placeholder, textarea::placeholder {
+            color: #64748b;
+        }
+
+        option {
+            background: #0f172a;
+            color: white;
+        }
+
+        /* ===== FILE INPUTS ===== */
+        input[type="file"] {
+            padding: 10px;
+            height: auto;
+            background: rgba(255, 255, 255, 0.02);
+            cursor: pointer;
+        }
+
+        input[type="file"]::file-selector-button {
+            padding: 8px 20px;
+            border: none;
+            border-radius: 12px;
+            background: linear-gradient(135deg, var(--primary-dark), var(--primary));
+            color: white;
+            font-weight: 500;
+            cursor: pointer;
+            margin-right: 15px;
+            transition: 0.3s;
+        }
+
+        input[type="file"]::file-selector-button:hover {
+            transform: scale(1.02);
+        }
+
+        /* ===== BUTTONS ===== */
+        .buttons {
+            margin-top: 35px;
+            display: flex;
+            gap: 16px;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .btn {
+            height: 56px;
+            border: none;
+            border-radius: 16px;
+            padding: 0 32px;
+            font-size: 15px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: 0.3s;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .btn-left {
+            display: flex;
+            gap: 12px;
+        }
+
+        .prev-btn {
+            background: rgba(255, 255, 255, 0.06);
+            color: white;
+        }
+
+        .prev-btn:hover {
+            background: rgba(255, 255, 255, 0.12);
+            transform: translateY(-2px);
+        }
+
+        .next-btn, .submit-btn {
+            background: linear-gradient(135deg, var(--primary-dark), var(--primary));
+            color: white;
+            box-shadow: 0 10px 25px rgba(37, 99, 235, 0.3);
+        }
+
+        .next-btn:hover, .submit-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 15px 35px rgba(37, 99, 235, 0.4);
+        }
+
+        .submit-btn {
+            display: none;
+        }
+
+        /* ===== MODAL / ALERT ===== */
+        .modal-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.7);
+            backdrop-filter: blur(6px);
+            justify-content: center;
+            align-items: center;
+            z-index: 9999;
+        }
+
+        .modal-box {
+            background: rgba(255, 255, 255, 0.06);
+            backdrop-filter: blur(20px);
+            border: 1px solid var(--border);
+            padding: 40px 35px;
+            border-radius: 24px;
+            text-align: center;
+            width: 400px;
+            animation: pop 0.4s ease;
+        }
+
+        @keyframes pop {
+            from { transform: scale(0.8); opacity: 0; }
+            to { transform: scale(1); opacity: 1; }
+        }
+
+        .modal-box i {
+            font-size: 64px;
+            margin-bottom: 16px;
+        }
+
+        .modal-box .success-icon {
+            color: #22c55e;
+        }
+
+        .modal-box .warning-icon {
+            color: #f59e0b;
+        }
+
+        .modal-box h2 {
+            font-size: 24px;
+            font-weight: 700;
+            margin-bottom: 8px;
+        }
+
+        .modal-box p {
+            color: var(--muted);
+            font-size: 15px;
+            margin-bottom: 25px;
+        }
+
+        .modal-box .modal-btn {
+            padding: 12px 35px;
+            border: none;
+            border-radius: 14px;
+            background: linear-gradient(135deg, var(--primary-dark), var(--primary));
+            color: white;
+            font-size: 15px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+
+        .modal-box .modal-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px rgba(37, 99, 235, 0.3);
+        }
+
+        /* ===== RESPONSIVE ===== */
+        @media (max-width: 1100px) {
+            .wrapper {
+                grid-template-columns: 1fr;
+            }
+
+            .sidebar {
+                position: relative;
+                top: 0;
+            }
+
+            .steps {
+                flex-direction: row;
+                flex-wrap: wrap;
+                gap: 6px;
+            }
+
+            .steps li {
+                font-size: 12px;
+                padding: 10px 14px;
+            }
+
+            .steps li .step-count {
+                display: none;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .content {
+                padding: 24px 18px;
+            }
+
+            .card {
+                padding: 20px 16px;
+            }
+
+            .row {
+                grid-template-columns: 1fr;
+                gap: 0;
+            }
+
+            .top h1 {
+                font-size: 28px;
+            }
+
+            .buttons {
+                flex-direction: column;
+                align-items: stretch;
+            }
+
+            .btn {
+                width: 100%;
+                justify-content: center;
+            }
+
+            .btn-left {
+                flex-direction: column;
+                gap: 10px;
+            }
+
+            .modal-box {
+                width: 90%;
+                padding: 30px 20px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .steps li {
+                font-size: 11px;
+                padding: 8px 12px;
+                gap: 8px;
+            }
+
+            .steps li i {
+                font-size: 12px;
+            }
+
+            .logo {
+                font-size: 24px;
+            }
+
+            .top h1 {
+                font-size: 24px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- ===== BACKGROUND ===== -->
+    <div class="bg">
+        <div class="circle"></div>
+        <div class="circle"></div>
+    </div>
+
+    <!-- ===== WRAPPER ===== -->
+    <div class="wrapper">
+
+        <!-- ===== SIDEBAR ===== -->
+        <div class="sidebar">
+            <div class="logo">Rental<span>Hub</span></div>
+            <ul class="steps" id="stepsList">
+                <li class="active" data-step="0">
+                    <i class="fa-solid fa-car"></i> Basic Details
+                    <span class="step-count">1/8</span>
+                </li>
+                <li data-step="1">
+                    <i class="fa-solid fa-wallet"></i> Pricing
+                    <span class="step-count">2/8</span>
+                </li>
+                <li data-step="2">
+                    <i class="fa-solid fa-location-dot"></i> Location
+                    <span class="step-count">3/8</span>
+                </li>
+                <li data-step="3">
+                    <i class="fa-solid fa-clock"></i> Availability
+                    <span class="step-count">4/8</span>
+                </li>
+                <li data-step="4">
+                    <i class="fa-solid fa-gears"></i> Specs
+                    <span class="step-count">5/8</span>
+                </li>
+                <li data-step="5">
+                    <i class="fa-solid fa-images"></i> Images
+                    <span class="step-count">6/8</span>
+                </li>
+                <li data-step="6">
+                    <i class="fa-solid fa-shield"></i> Verification
+                    <span class="step-count">7/8</span>
+                </li>
+                <li data-step="7">
+                    <i class="fa-solid fa-file-lines"></i> Description
+                    <span class="step-count">8/8</span>
+                </li>
+            </ul>
+        </div>
+
+        <!-- ===== CONTENT ===== -->
+        <div class="content">
+
+            <div class="top">
+                <h1>Add Vehicle</h1>
+                <p>Fill complete vehicle details to publish your vehicle on the platform.</p>
+            </div>
+
+            <div class="progress">
+                <div class="progress-bar" id="progressBar"></div>
+            </div>
+
+            <form id="vehicleForm" method="POST" enctype="multipart/form-data" action="{% url 'listing' %}">
+                {% csrf_token %}
+
+                <!-- ===== STEP 1: Basic Details ===== -->
+                <div class="step active" data-step="0">
+                    <div class="card">
+                        <h2><i class="fa-solid fa-car" style="color:var(--primary);margin-right:10px;"></i> Basic Details</h2>
+                        <div class="input-group">
+                            <label><i class="fa-solid fa-hashtag"></i> Vehicle Number</label>
+                            <input type="text" name="number_plate" placeholder="e.g. KL-01-AB-1234" required />
+                        </div>
+                        <div class="row">
+                            <div class="input-group">
+                                <label><i class="fa-solid fa-tag"></i> Brand</label>
+                                <input type="text" name="brand" placeholder="e.g. Toyota, Honda" required />
+                            </div>
+                            <div class="input-group">
+                                <label><i class="fa-solid fa-calendar"></i> Year</label>
+                                <input type="number" name="year" placeholder="e.g. 2023" required />
+                            </div>
+                        </div>
+                        <div class="input-group">
+                            <label><i class="fa-solid fa-arrow-right"></i> Vehicle Type</label>
+                            <select name="type">
+                                <option value="car">Car</option>
+                                <option value="bike">Bike</option>
+                                <option value="auto">Auto</option>
+                                <option value="van">Heavy Vehicles</option>
+                                <option value="other">Other</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- ===== STEP 2: Pricing ===== -->
+                <div class="step" data-step="1">
+                    <div class="card">
+                        <h2><i class="fa-solid fa-wallet" style="color:var(--primary);margin-right:10px;"></i> Pricing</h2>
+                        <div class="input-group">
+                            <label><i class="fa-solid fa-indian-rupee-sign"></i> Price Per Day</label>
+                            <input type="number" name="price_day" placeholder="Enter daily rent price" required />
+                        </div>
+                    </div>
+                </div>
+
+                <!-- ===== STEP 3: Location ===== -->
+                <div class="step" data-step="2">
+                    <div class="card">
+                        <h2><i class="fa-solid fa-location-dot" style="color:var(--primary);margin-right:10px;"></i> Location Details</h2>
+                        <div class="row">
+                            <div class="input-group">
+                                <label><i class="fa-solid fa-city"></i> District</label>
+                                <select name="location">
+                                    <option value="">Select District</option>
+                                    <option value="Thiruvananthapuram">Thiruvananthapuram</option>
+                                    <option value="Kollam">Kollam</option>
+                                    <option value="Pathanamthitta">Pathanamthitta</option>
+                                    <option value="Alappuzha">Alappuzha</option>
+                                    <option value="Kottayam">Kottayam</option>
+                                    <option value="Idukki">Idukki</option>
+                                    <option value="Ernakulam">Ernakulam</option>
+                                    <option value="Thrissur">Thrissur</option>
+                                    <option value="Palakkad">Palakkad</option>
+                                    <option value="Malappuram">Malappuram</option>
+                                    <option value="Kozhikode">Kozhikode</option>
+                                    <option value="Kannur">Kannur</option>
+                                    <option value="Kasaragod">Kasaragod</option>
+                                </select>
+                            </div>
+                            <div class="input-group">
+                                <label><i class="fa-solid fa-map-pin"></i> Pickup Location</label>
+                                <input type="text" name="pickup" placeholder="Enter exact pickup area" required />
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- ===== STEP 4: Availability ===== -->
+                <div class="step" data-step="3">
+                    <div class="card">
+                        <h2><i class="fa-solid fa-clock" style="color:var(--primary);margin-right:10px;"></i> Availability Status</h2>
+                        <div class="input-group">
+                            <label><i class="fa-solid fa-check-circle"></i> Vehicle Availability</label>
+                            <select name="availability">
+                                <option value="available">Available</option>
+                                <option value="not_available">Not Available</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- ===== STEP 5: Specs ===== -->
+                <div class="step" data-step="4">
+                    <div class="card">
+                        <h2><i class="fa-solid fa-gears" style="color:var(--primary);margin-right:10px;"></i> Vehicle Specifications</h2>
+                        <div class="row">
+                            <div class="input-group">
+                                <label><i class="fa-solid fa-gas-pump"></i> Fuel Type</label>
+                                <select name="fuel">
+                                    <option value="petrol">Petrol</option>
+                                    <option value="diesel">Diesel</option>
+                                </select>
+                            </div>
+                            <div class="input-group">
+                                <label><i class="fa-solid fa-gear"></i> Transmission</label>
+                                <select name="trans">
+                                    <option value="manual">Manual</option>
+                                    <option value="automatic">Automatic</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="input-group">
+                            <label><i class="fa-solid fa-road"></i> Mileage</label>
+                            <input type="number" name="mileage" placeholder="e.g. 18 (km/l)" required />
+                        </div>
+                    </div>
+                </div>
+
+                <!-- ===== STEP 6: Images ===== -->
+                <div class="step" data-step="5">
+                    <div class="card">
+                        <h2><i class="fa-solid fa-images" style="color:var(--primary);margin-right:10px;"></i> Upload Vehicle Images</h2>
+                        <div class="row">
+                            <div class="input-group">
+                                <label><i class="fa-solid fa-image"></i> Image 1</label>
+                                <input type="file" name="im1" accept="image/*" required />
+                            </div>
+                            <div class="input-group">
+                                <label><i class="fa-solid fa-image"></i> Image 2</label>
+                                <input type="file" name="im2" accept="image/*" />
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="input-group">
+                                <label><i class="fa-solid fa-image"></i> Image 3</label>
+                                <input type="file" name="im3" accept="image/*" />
+                            </div>
+                            <div class="input-group">
+                                <label><i class="fa-solid fa-image"></i> Image 4</label>
+                                <input type="file" name="im4" accept="image/*" />
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- ===== STEP 7: Verification ===== -->
+                <div class="step" data-step="6">
+                    <div class="card">
+                        <h2><i class="fa-solid fa-shield" style="color:var(--primary);margin-right:10px;"></i> Verification Documents</h2>
+                        <div class="row">
+                            <div class="input-group">
+                                <label><i class="fa-solid fa-file-pdf"></i> RC Book Image 1</label>
+                                <input type="file" name="vimg1" accept="image/*" required />
+                            </div>
+                            <div class="input-group">
+                                <label><i class="fa-solid fa-file-pdf"></i> RC Book Image 2</label>
+                                <input type="file" name="vimg2" accept="image/*" />
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- ===== STEP 8: Description ===== -->
+                <div class="step" data-step="7">
+                    <div class="card">
+                        <h2><i class="fa-solid fa-file-lines" style="color:var(--primary);margin-right:10px;"></i> Vehicle Description</h2>
+                        <div class="input-group">
+                            <label><i class="fa-solid fa-align-left"></i> Description</label>
+                            <textarea name="desc" placeholder="Write complete details about your vehicle..." required></textarea>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- ===== BUTTONS ===== -->
+                <div class="buttons">
+                    <div class="btn-left">
+                        <button type="button" class="btn prev-btn" onclick="prevStep()">
+                            <i class="fa-solid fa-arrow-left"></i> Previous
+                        </button>
+                    </div>
+                    <div>
+                        <button type="button" class="btn next-btn" onclick="nextStep()">
+                            Next Step <i class="fa-solid fa-arrow-right"></i>
+                        </button>
+                        <button type="submit" class="btn submit-btn" id="submitBtn">
+                            <i class="fa-solid fa-check"></i> Submit Vehicle
+                        </button>
+                    </div>
+                </div>
+
+            </form>
+        </div>
+    </div>
+
+    <!-- ===== MODALS ===== -->
+    <div class="modal-overlay" id="successModal">
+        <div class="modal-box">
+            <i class="fa-solid fa-circle-check success-icon"></i>
+            <h2>Success!</h2>
+            <p>Vehicle Details Added Successfully!</p>
+            <button class="modal-btn" onclick="closeModal('successModal')">OK</button>
+        </div>
+    </div>
+
+    <div class="modal-overlay" id="warningModal">
+        <div class="modal-box">
+            <i class="fa-solid fa-triangle-exclamation warning-icon"></i>
+            <h2>Warning!</h2>
+            <p>Vehicle Already Exists!</p>
+            <button class="modal-btn" onclick="closeModal('warningModal')">OK</button>
+        </div>
+    </div>
+
+    <!-- ===== SCRIPTS ===== -->
+    <script>
+        let currentStep = 0;
+        const totalSteps = document.querySelectorAll('.step').length;
+        const steps = document.querySelectorAll('.step');
+        const sidebarItems = document.querySelectorAll('.steps li');
+        const progressBar = document.getElementById('progressBar');
+        const submitBtn = document.getElementById('submitBtn');
+        const nextBtn = document.querySelector('.next-btn');
+
+        function updateUI() {
+            // Show/hide steps
+            steps.forEach((step, i) => {
+                step.classList.toggle('active', i === currentStep);
+            });
+
+            // Update sidebar
+            sidebarItems.forEach((item, i) => {
+                item.classList.toggle('active', i === currentStep);
+            });
+
+            // Update progress bar
+            const percent = ((currentStep + 1) / totalSteps) * 100;
+            progressBar.style.width = percent + '%';
+
+            // Show/hide submit button
+            if (currentStep === totalSteps - 1) {
+                submitBtn.style.display = 'inline-flex';
+                nextBtn.style.display = 'none';
+            } else {
+                submitBtn.style.display = 'none';
+                nextBtn.style.display = 'inline-flex';
+            }
+        }
+
+        function nextStep() {
+            if (currentStep < totalSteps - 1) {
+                currentStep++;
+                updateUI();
+            }
+        }
+
+        function prevStep() {
+            if (currentStep > 0) {
+                currentStep--;
+                updateUI();
+            }
+        }
+
+        // Click on sidebar items to navigate
+        sidebarItems.forEach((item, index) => {
+            item.addEventListener('click', function() {
+                currentStep = index;
+                updateUI();
+            });
+        });
+
+        // Modal functions
+        function openModal(id) {
+            document.getElementById(id).style.display = 'flex';
+        }
+
+        function closeModal(id) {
+            document.getElementById(id).style.display = 'none';
+            window.location.href = "{% url 'home' %}";
+        }
+
+        // Close modal on outside click
+        document.querySelectorAll('.modal-overlay').forEach(modal => {
+            modal.addEventListener('click', function(e) {
+                if (e.target === this) {
+                    this.style.display = 'none';
+                    window.location.href = "{% url 'home' %}";
+                }
+            });
+        });
+
+        // Django Success / Error Handling
+       const showSuccessModal = "{{ success|default:'' }}" === "True";
+       const showWarningModal = "{{ vehicle_exists|default:'' }}" === "True";
+        document.addEventListener('DOMContentLoaded', function() {
+            updateUI();
+            if (showSuccessModal) openModal('successModal');
+            if (showWarningModal) openModal('warningModal');
+        });
+    </script>
+
+</body>
+</html>

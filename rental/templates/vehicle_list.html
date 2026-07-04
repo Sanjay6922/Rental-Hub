@@ -1,0 +1,584 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Premium Vehicle Listings</title>
+    <!-- External Libraries -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
+    <!-- ==================== CSS STYLES ==================== -->
+    <style>
+        /* ---------- RESET & GLOBAL ---------- */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Poppins', sans-serif;
+        }
+        body {
+            background: #0f172a;
+            color: white;
+            overflow-x: hidden;
+        }
+
+        /* ---------- BACKGROUND ANIMATION ---------- */
+        .bg-animation {
+            position: fixed;
+            width: 100%;
+            height: 100vh;
+            overflow: hidden;
+            z-index: -1;
+        }
+        .circle {
+            position: absolute;
+            border-radius: 50%;
+            background: rgba(59, 130, 246, 0.12);
+            animation: float 10s linear infinite;
+        }
+        .circle:nth-child(1) {
+            width: 300px;
+            height: 300px;
+            left: -100px;
+            top: 100px;
+        }
+        .circle:nth-child(2) {
+            width: 250px;
+            height: 250px;
+            right: -80px;
+            top: 350px;
+            animation-duration: 14s;
+        }
+        .circle:nth-child(3) {
+            width: 200px;
+            height: 200px;
+            bottom: -80px;
+            left: 40%;
+            animation-duration: 18s;
+        }
+        @keyframes float {
+            0% { transform: translateY(0) rotate(0); }
+            50% { transform: translateY(-40px) rotate(180deg); }
+            100% { transform: translateY(0) rotate(360deg); }
+        }
+
+        /* ---------- NAVIGATION BAR ---------- */
+        .navbar {
+            width: 100%;
+            padding: 18px 60px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: fixed;
+            top: 0;
+            z-index: 1000;
+            backdrop-filter: blur(18px);
+            background: rgba(15, 23, 42, 0.75);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+        }
+        .logo {
+            font-size: 32px;
+            font-weight: 700;
+            color: white;
+        }
+        .logo span {
+            color: #3b82f6;
+        }
+        .nav-links {
+            display: flex;
+            align-items: center;
+        }
+        .nav-links a {
+            text-decoration: none;
+            color: #cbd5e1;
+            margin-left: 28px;
+            transition: 0.3s;
+            font-size: 15px;
+        }
+        .nav-links a:hover {
+            color: #60a5fa;
+        }
+
+        /* ---------- HERO SECTION ---------- */
+        .hero {
+            height: 75vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            position: relative;
+            background: linear-gradient(rgba(15,23,42,0.75), rgba(15,23,42,0.92)),
+                        url("https://images.unsplash.com/photo-1492144534655-ae79c964c9d8?q=80&w=2000") center/cover;
+        }
+        .hero h1 {
+            font-size: 72px;
+            font-weight: 700;
+            margin-bottom: 18px;
+        }
+        .hero p {
+            font-size: 20px;
+            color: #cbd5e1;
+            max-width: 700px;
+            line-height: 1.7;
+        }
+
+        /* ---------- SEARCH WRAPPER & FORM ---------- */
+        .search-wrapper {
+            width: 90%;
+            margin: -90px auto 60px;
+            position: relative;
+            z-index: 50;
+        }
+        .search-header {
+            text-align: center;
+            margin-bottom: 35px;
+        }
+        .search-header h1 {
+            font-size: 42px;
+            color: white;
+            margin-bottom: 12px;
+            font-weight: 700;
+        }
+        .search-header p {
+            color: #94a3b8;
+            font-size: 17px;
+        }
+        .premium-search-box {
+            background: rgba(255, 255, 255, 0.08);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 35px;
+            padding: 35px;
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 22px;
+            box-shadow: 0 25px 60px rgba(0, 0, 0, 0.35);
+        }
+        .search-field {
+            display: flex;
+            flex-direction: column;
+        }
+        .search-field label {
+            color: #cbd5e1;
+            margin-bottom: 12px;
+            font-size: 15px;
+            font-weight: 500;
+        }
+        .search-field label i {
+            color: #60a5fa;
+            margin-right: 8px;
+        }
+        .search-field select,
+        .search-field input {
+            height: 62px;
+            border: none;
+            outline: none;
+            border-radius: 18px;
+            padding: 0 20px;
+            background: rgba(255, 255, 255, 0.05);
+            color: white;
+            font-size: 15px;
+            transition: 0.3s;
+        }
+        .search-field input::placeholder {
+            color: #94a3b8;
+        }
+        .search-field select:focus,
+        .search-field input:focus {
+            border: 1px solid #3b82f6;
+            box-shadow: 0 0 20px rgba(59, 130, 246, 0.25);
+        }
+        .search-field option {
+            background: #0f172a;
+        }
+        .search-btn-group {
+            display: flex;
+            gap: 15px;
+            align-items: end;
+        }
+        .search-btn {
+            flex: 1;
+            height: 62px;
+            border: none;
+            border-radius: 18px;
+            background: linear-gradient(135deg, #2563eb, #3b82f6);
+            color: white;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+        .search-btn:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 20px 40px rgba(37, 99, 235, 0.35);
+        }
+        .clear-btn {
+            height: 62px;
+            padding: 0 24px;
+            border-radius: 18px;
+            background: rgba(255, 255, 255, 0.08);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            color: #cbd5e1;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            transition: 0.3s;
+        }
+        .clear-btn:hover {
+            background: #ef4444;
+            color: white;
+            transform: translateY(-4px);
+        }
+
+        /* ---------- VEHICLE CARDS CONTAINER ---------- */
+        .container {
+    width: 90%;
+    margin: auto;
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 30px;
+    padding-bottom: 60px;
+}
+        }
+
+        /* ---------- INDIVIDUAL CARD ---------- */
+        .card {
+            background: rgba(255, 255, 255, 0.08);
+            backdrop-filter: blur(16px);
+            border-radius: 30px;
+            overflow: hidden;
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            transition: 0.4s;
+            position: relative;
+        }
+        .card:hover {
+            transform: translateY(-12px);
+            box-shadow: 0 25px 50px rgba(0, 0, 0, 0.35);
+        }
+        .card-image {
+            height: 260px;
+            overflow: hidden;
+            position: relative;
+        }
+        .card-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: 0.5s;
+        }
+        .card:hover .card-image img {
+            transform: scale(1.08);
+        }
+        .availability {
+            position: absolute;
+            top: 18px;
+            left: 18px;
+            padding: 10px 18px;
+            border-radius: 30px;
+            font-size: 13px;
+            font-weight: 600;
+            backdrop-filter: blur(10px);
+        }
+        .available {
+            background: rgba(34, 197, 94, 0.2);
+            color: #22c55e;
+        }
+        .unavailable {
+            background: rgba(239, 68, 68, 0.2);
+            color: #ef4444;
+        }
+        .card-body {
+            padding: 25px;
+        }
+        .title-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 18px;
+        }
+        .title-row h2 {
+            font-size: 30px;
+            color: white;
+        }
+        .price {
+            color: #60a5fa;
+            font-size: 26px;
+            font-weight: 700;
+        }
+        .location {
+            color: #94a3b8;
+            margin-bottom: 22px;
+            font-size: 15px;
+        }
+        .features {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 15px;
+            margin-bottom: 22px;
+        }
+        .feature {
+            background: rgba(255, 255, 255, 0.05);
+            padding: 15px;
+            border-radius: 16px;
+            color: #cbd5e1;
+            font-size: 14px;
+        }
+        .feature i {
+            color: #60a5fa;
+            margin-right: 8px;
+        }
+        .desc {
+            color: #cbd5e1;
+            line-height: 1.7;
+            margin-bottom: 28px;
+            min-height: 70px;
+        }
+        .buttons {
+            display: flex;
+            gap: 15px;
+            align-items: stretch;
+        }
+        .buttons a,
+        .buttons button {
+            flex: 1;
+        }
+        .buttons button {
+            height: 55px;
+        }
+        .btn {
+            width: 100%;
+            padding: 16px;
+            border: none;
+            border-radius: 18px;
+            cursor: pointer;
+            font-size: 15px;
+            font-weight: 600;
+            transition: 0.3s;
+        }
+        .btn-primary {
+            background: linear-gradient(135deg, #2563eb, #3b82f6);
+            color: white;
+        }
+        .btn-outline {
+            background: transparent;
+            border: 1px solid #3b82f6;
+            color: #60a5fa;
+        }
+        .btn:hover {
+            transform: translateY(-3px);
+        }
+
+        /* ---------- SLIDER (IMAGE CAROUSEL) ---------- */
+        .slider {
+            position: relative;
+            width: 100%;
+            height: 260px;
+        }
+        .slide {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            opacity: 0;
+            transition: opacity 1s ease;
+        }
+        .slide.active {
+            opacity: 1;
+        }
+
+        /* ---------- RESPONSIVE DESIGN ---------- */
+        @media (max-width: 1100px) {
+            .premium-search-box {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+        @media (max-width: 992px) {
+            .hero h1 {
+                font-size: 50px;
+            }
+            .navbar {
+                padding: 18px 30px;
+            }
+        }
+        @media (max-width: 768px) {
+            .navbar {
+                flex-direction: column;
+                gap: 15px;
+            }
+            .hero {
+                height: 65vh;
+            }
+            .hero h1 {
+                font-size: 38px;
+            }
+            .hero p {
+                font-size: 16px;
+                padding: 0 20px;
+            }
+            .premium-search-box {
+                grid-template-columns: 1fr;
+            }
+            .container {
+                grid-template-columns: 1fr;
+            }
+            .search-header h1 {
+                font-size: 32px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- ==================== BACKGROUND ANIMATION ELEMENTS ==================== -->
+    <div class="bg-animation">
+        <div class="circle"></div>
+        <div class="circle"></div>
+        <div class="circle"></div>
+    </div>
+
+    <!-- ==================== NAVIGATION BAR ==================== -->
+    <div class="navbar">
+        <div class="logo">Rental<span>Hub</span></div>
+        <div class="nav-links">
+            <a href="/home">Home</a>
+            <a href="/vehicles">Vehicles</a>
+            <a href="/profile">Dashboard</a>
+            <a href="{% url 'logout' %}">Logout</a>
+        </div>
+    </div>
+
+    <!-- ==================== HERO SECTION ==================== -->
+    <div class="hero">
+        <h1>Premium Vehicle Rentals</h1>
+        <p>Explore luxury cars, bikes and premium vehicles near your location with secure and trusted booking experience.</p>
+    </div>
+
+    <!-- ==================== SEARCH SECTION ==================== -->
+    <div class="search-wrapper">
+        <div class="search-header">
+            <h1>Find Your Perfect Ride</h1>
+            <p>Search premium vehicles by district, vehicle type and fuel category.</p>
+        </div>
+        <form method="GET" action="{% url 'vehicle_list' %}">
+            <div class="premium-search-box">
+                <!-- Location Dropdown -->
+                <div class="search-field">
+                    <label><i class="fa-solid fa-location-dot"></i> District</label>
+                    <select name="location">
+                        <option value="">Select District</option>
+                        <option value="Thiruvananthapuram">Thiruvananthapuram</option>
+                        <option value="Kollam">Kollam</option>
+                        <option value="Pathanamthitta">Pathanamthitta</option>
+                        <option value="Alappuzha">Alappuzha</option>
+                        <option value="Kottayam">Kottayam</option>
+                        <option value="Idukki">Idukki</option>
+                        <option value="Ernakulam">Ernakulam</option>
+                        <option value="Thrissur">Thrissur</option>
+                        <option value="Palakkad">Palakkad</option>
+                        <option value="Malappuram">Malappuram</option>
+                        <option value="Kozhikode">Kozhikode</option>
+                        <option value="Kannur">Kannur</option>
+                        <option value="Kasaragod">Kasaragod</option>
+                    </select>
+                </div>
+                <!-- Vehicle Type Dropdown -->
+                <div class="search-field">
+                    <label><i class="fa-solid fa-car-side"></i> Vehicle Type</label>
+                    <select name="type">
+                        <option value="">Select Type</option>
+                        <option value="car">Car</option>
+                        <option value="bike">Bike</option>
+                        <option value="auto">Auto</option>
+                        <option value="others">Others</option>
+                    </select>
+                </div>
+                <!-- Fuel Type Dropdown -->
+                <div class="search-field">
+                    <label><i class="fa-solid fa-gas-pump"></i> Fuel Type</label>
+                    <select name="fuel">
+                        <option value="">Select Fuel</option>
+                        <option value="petrol">Petrol</option>
+                        <option value="diesel">Diesel</option>
+                    </select>
+                </div>
+                <!-- Buttons -->
+                <div class="search-btn-group">
+                    <button type="submit" class="search-btn"><i class="fa-solid fa-magnifying-glass"></i> Search</button>
+                    <a href="{% url 'vehicle_list' %}" class="clear-btn"><i class="fa-solid fa-rotate-right"></i> Clear</a>
+                </div>
+            </div>
+        </form>
+    </div>
+
+    <!-- ==================== VEHICLE LISTINGS (CARDS) ==================== -->
+    <div class="container">
+        {% for i in data %}
+        <div class="card">
+            <!-- Image Slider Section -->
+            <div class="card-image">
+                <div class="slider">
+                    {% if i.image1 %}<img src="{{ i.image1.url }}" class="slide active">{% endif %}
+                    {% if i.image2 %}<img src="{{ i.image2.url }}" class="slide">{% endif %}
+                    {% if i.image3 %}<img src="{{ i.image3.url }}" class="slide">{% endif %}
+                    {% if i.image4 %}<img src="{{ i.image4.url }}" class="slide">{% endif %}
+                </div>
+                <!-- Availability Badge -->
+                {% if i.is_available %}
+                <div class="availability available">Available</div>
+                {% else %}
+                <div class="availability unavailable">Unavailable</div>
+                {% endif %}
+            </div>
+            <!-- Card Body -->
+            <div class="card-body">
+                <!-- Title & Price -->
+                <div class="title-row">
+                    <h2>{{ i.brand }}</h2>
+                    <div class="price">₹{{ i.price_per_day }}/day</div>
+                </div>
+                <!-- Location -->
+                <div class="location"><i class="fa-solid fa-location-dot"></i> {{ i.location }}</div>
+                <!-- Features Grid -->
+                <div class="features">
+                    <div class="feature"><i class="fa-solid fa-car"></i> {{ i.type }}</div>
+                    <div class="feature"><i class="fa-solid fa-gas-pump"></i> {{ i.fuel }}</div>
+                    <div class="feature"><i class="fa-solid fa-gears"></i> {{ i.trans }}</div>
+                    <div class="feature"><i class="fa-solid fa-road"></i> {{ i.mileage }} km</div>
+                </div>
+                <!-- Description -->
+                <div class="desc">{{ i.description }}</div>
+                <!-- Action Buttons -->
+                <div class="buttons">
+                    {% if i.is_available %}
+                    <a href="{% url 'book_vehicle' i.id %}"><button class="btn btn-primary">Book Now</button></a>
+                    {% else %}
+                    <button class="btn btn-primary" style="background:#dc2626;cursor:not-allowed;" disabled>Unavailable</button>
+                    {% endif %}
+                    <a href="{% url 'vehicle_details' i.id %}"><button class="btn btn-outline">View Details</button></a>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+
+    <!-- ==================== JAVASCRIPT (SLIDER AUTO-ROTATE) ==================== -->
+    <script>
+        // Auto-rotate images inside each slider every 3 seconds
+        document.querySelectorAll(".slider").forEach((slider) => {
+            let slides = slider.querySelectorAll(".slide");
+            if (slides.length <= 1) return;
+            let current = 0;
+            setInterval(() => {
+                slides[current].classList.remove("active");
+                current = (current + 1) % slides.length;
+                slides[current].classList.add("active");
+            }, 3000);
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,417 @@
+{% load static %}
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>RentalHub – Write a Review</title>
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet" />
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: "Poppins", sans-serif;
+        }
+        body {
+            background: #0f172a;
+            color: white;
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+        /* Background Animation */
+        .bg-animation {
+            position: fixed;
+            width: 100%;
+            height: 100vh;
+            overflow: hidden;
+            z-index: -1;
+        }
+        .circle {
+            position: absolute;
+            border-radius: 50%;
+            background: rgba(59, 130, 246, 0.15);
+            animation: float 12s infinite linear;
+        }
+        .circle:nth-child(1) {
+            width: 300px;
+            height: 300px;
+            left: -100px;
+            top: 120px;
+        }
+        .circle:nth-child(2) {
+            width: 250px;
+            height: 250px;
+            right: -80px;
+            top: 300px;
+            animation-duration: 15s;
+        }
+        .circle:nth-child(3) {
+            width: 200px;
+            height: 200px;
+            left: 40%;
+            bottom: -60px;
+            animation-duration: 18s;
+        }
+        @keyframes float {
+            0% { transform: translateY(0px) rotate(0deg); }
+            50% { transform: translateY(-40px) rotate(180deg); }
+            100% { transform: translateY(0px) rotate(360deg); }
+        }
+
+        /* Navbar */
+        .navbar {
+            width: 92%;
+            margin: 20px auto;
+            padding: 18px 35px;
+            border-radius: 24px;
+            background: rgba(255, 255, 255, 0.08);
+            backdrop-filter: blur(14px);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .logo {
+            color: white;
+            font-size: 30px;
+            font-weight: 700;
+        }
+        .logo span { color: #3b82f6; }
+        .nav-links {
+            display: flex;
+            align-items: center;
+            gap: 18px;
+        }
+        .nav-links a {
+            text-decoration: none;
+            color: #cbd5e1;
+            transition: 0.3s;
+            font-size: 15px;
+        }
+        .nav-links a:hover { color: white; }
+        .nav-btn {
+            padding: 12px 22px;
+            border-radius: 14px;
+            background: linear-gradient(135deg, #2563eb, #3b82f6);
+            color: white !important;
+            box-shadow: 0 10px 25px rgba(37, 99, 235, 0.35);
+        }
+        .nav-btn:hover { transform: translateY(-3px); }
+
+        /* Review Form Container */
+        .review-container {
+            width: 92%;
+            max-width: 720px;
+            margin: 40px auto 80px;
+        }
+        .review-card {
+            background: rgba(255, 255, 255, 0.06);
+            backdrop-filter: blur(14px);
+            border-radius: 32px;
+            padding: 50px 45px;
+            border: 1px solid rgba(255, 255, 255, 0.06);
+            box-shadow: 0 25px 50px rgba(0, 0, 0, 0.3);
+            animation: slideUp 0.8s ease;
+        }
+        @keyframes slideUp {
+            from { opacity: 0; transform: translateY(40px); }
+            to { opacity: 1; transform: translateY(0px); }
+        }
+        .review-card .header {
+            text-align: center;
+            margin-bottom: 35px;
+        }
+        .review-card .header .icon {
+            font-size: 52px;
+            color: #60a5fa;
+            margin-bottom: 12px;
+        }
+        .review-card .header h1 {
+            font-size: 34px;
+            font-weight: 700;
+            color: white;
+        }
+        .review-card .header p {
+            color: #94a3b8;
+            font-size: 16px;
+            margin-top: 6px;
+        }
+
+        /* Form Styles */
+        .review-form .form-group {
+            margin-bottom: 22px;
+        }
+        .review-form label {
+            display: block;
+            font-size: 15px;
+            font-weight: 500;
+            color: #cbd5e1;
+            margin-bottom: 8px;
+        }
+        .review-form label .required {
+            color: #ef4444;
+            margin-left: 4px;
+        }
+
+        /* Read-only name field */
+        .review-form .name-display {
+            width: 100%;
+            padding: 16px 18px;
+            border-radius: 14px;
+            border: 1px solid rgba(255, 255, 255, 0.06);
+            background: rgba(255, 255, 255, 0.04);
+            color: #94a3b8;
+            font-size: 15px;
+            cursor: not-allowed;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+        .review-form .name-display i {
+            color: #60a5fa;
+            font-size: 18px;
+        }
+        .review-form .name-display span {
+            color: white;
+            font-weight: 500;
+        }
+
+        .review-form textarea {
+            width: 100%;
+            padding: 16px 18px;
+            border-radius: 14px;
+            border: 1px solid rgba(255, 255, 255, 0.06);
+            background: rgba(255, 255, 255, 0.04);
+            color: white;
+            font-size: 15px;
+            transition: 0.3s;
+            outline: none;
+            font-family: "Poppins", sans-serif;
+            resize: vertical;
+            min-height: 140px;
+        }
+        .review-form textarea:focus {
+            border-color: #3b82f6;
+            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.15);
+        }
+        .review-form textarea::placeholder {
+            color: #64748b;
+        }
+
+        /* Star Rating */
+        .star-rating {
+            display: flex;
+            flex-direction: row-reverse;
+            gap: 8px;
+            justify-content: flex-end;
+            padding: 8px 0;
+        }
+        .star-rating input {
+            display: none;
+        }
+        .star-rating label {
+            font-size: 32px;
+            color: #475569;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+        .star-rating label:hover,
+        .star-rating label:hover ~ label,
+        .star-rating input:checked ~ label {
+            color: #f59e0b;
+        }
+        .star-rating label i {
+            transition: 0.2s;
+        }
+        .star-rating label:hover i {
+            transform: scale(1.15);
+        }
+
+        /* Actions */
+        .form-actions {
+            display: flex;
+            gap: 16px;
+            margin-top: 10px;
+        }
+        .btn-submit {
+            flex: 1;
+            padding: 16px 30px;
+            border: none;
+            border-radius: 16px;
+            background: linear-gradient(135deg, #2563eb, #3b82f6);
+            color: white;
+            font-size: 17px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: 0.4s;
+            box-shadow: 0 10px 25px rgba(37, 99, 235, 0.35);
+        }
+        .btn-submit:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 15px 40px rgba(37, 99, 235, 0.45);
+        }
+        .btn-back {
+            padding: 16px 28px;
+            border-radius: 16px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            background: rgba(255, 255, 255, 0.04);
+            color: #cbd5e1;
+            font-size: 16px;
+            font-weight: 500;
+            cursor: pointer;
+            text-decoration: none;
+            transition: 0.3s;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .btn-back:hover {
+            background: rgba(255, 255, 255, 0.1);
+            color: white;
+            transform: translateY(-2px);
+        }
+
+        @media (max-width: 768px) {
+            .navbar {
+                flex-direction: column;
+                gap: 20px;
+                padding: 16px 20px;
+            }
+            .nav-links {
+                flex-wrap: wrap;
+                justify-content: center;
+                gap: 12px;
+            }
+            .review-card {
+                padding: 30px 22px;
+            }
+            .review-card .header h1 {
+                font-size: 28px;
+            }
+            .form-actions {
+                flex-direction: column;
+            }
+            .btn-back {
+                justify-content: center;
+            }
+            .star-rating label {
+                font-size: 26px;
+            }
+        }
+        @media (max-width: 480px) {
+            .review-card {
+                padding: 22px 16px;
+            }
+            .review-card .header h1 {
+                font-size: 24px;
+            }
+            .review-form textarea {
+                padding: 14px;
+                font-size: 14px;
+            }
+            .star-rating label {
+                font-size: 22px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Background -->
+    <div class="bg-animation">
+        <div class="circle"></div>
+        <div class="circle"></div>
+        <div class="circle"></div>
+    </div>
+
+    <!-- Navbar -->
+    <div class="navbar">
+        <div class="logo">Rental<span>Hub</span></div>
+        <div class="nav-links">
+            <a href="{% url 'home' %}">Home</a>
+            <a href="{% url 'vehicle_list' %}">Vehicles</a>
+            <a href="#">Services</a>
+            <a href="{% url 'logout' %}" class="nav-btn">Logout</a>
+        </div>
+    </div>
+
+    <!-- Review Form -->
+    <div class="review-container">
+        <div class="review-card">
+            <div class="header">
+                <div class="icon"><i class="fa-regular fa-star"></i></div>
+                <h1>Write a Review</h1>
+                <p>Share your experience with the community. Your feedback matters!</p>
+            </div>
+
+            <form class="review-form" method="POST" action="{% url 'add_review' %}">
+                {% csrf_token %}
+
+                <!-- User Name (Auto-fetched from session) -->
+                <div class="form-group">
+                    <label>Your Name</label>
+                    <div class="name-display">
+                        <i class="fa-regular fa-user"></i>
+                        <span>{{request.session.u_id }}</span>
+                      
+                        <span style="color:#64748b;font-size:13px;margin-left:auto;">(auto-detected)</span>
+                    </div>
+                    <input type="hidden" name="user_id" value="{{ user.id }}" />
+                </div>
+
+                <!-- Rating -->
+                <div class="form-group">
+                    <label>Your Rating <span class="required">*</span></label>
+                    <div class="star-rating">
+                        <input type="radio" name="rating" id="star5" value="5" required />
+                        <label for="star5"><i class="fa-solid fa-star"></i></label>
+
+                        <input type="radio" name="rating" id="star4" value="4" />
+                        <label for="star4"><i class="fa-solid fa-star"></i></label>
+
+                        <input type="radio" name="rating" id="star3" value="3" />
+                        <label for="star3"><i class="fa-solid fa-star"></i></label>
+
+                        <input type="radio" name="rating" id="star2" value="2" />
+                        <label for="star2"><i class="fa-solid fa-star"></i></label>
+
+                        <input type="radio" name="rating" id="star1" value="1" />
+                        <label for="star1"><i class="fa-solid fa-star"></i></label>
+                    </div>
+                </div>
+
+                <!-- Comment -->
+                <div class="form-group">
+                    <label for="comment">Your Review <span class="required">*</span></label>
+                    <textarea name="comment" id="comment" placeholder="Write your detailed review here..." required></textarea>
+                </div>
+
+                <!-- Actions -->
+                <div class="form-actions">
+                    <button type="submit" class="btn-submit">
+                        <i class="fa-regular fa-paper-plane"></i> Submit Review
+                    </button>
+                    <a href="{% url 'home' %}" class="btn-back">
+                        <i class="fa-solid fa-arrow-left"></i> Back
+                    </a>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        document.querySelector('.review-form').addEventListener('submit', function(e) {
+            const btn = this.querySelector('.btn-submit');
+            btn.disabled = true;
+            btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Submitting...';
+        });
+    </script>
+</body>
+</html>

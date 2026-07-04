@@ -1,0 +1,287 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Admin - Users</title>
+
+<link rel="stylesheet"
+href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
+<style>
+
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+    font-family:'Poppins',sans-serif;
+}
+
+body{
+    background:#0f172a;
+}
+
+.dashboard{
+    display:flex;
+    min-height:100vh;
+}
+
+/* SIDEBAR */
+
+.sidebar{
+    width:280px;
+    background:#111827;
+    padding:25px;
+    position:fixed;
+    height:100%;
+}
+
+.logo{
+    color:white;
+    font-size:28px;
+    font-weight:700;
+    margin-bottom:40px;
+}
+
+.logo span{
+    color:#3b82f6;
+}
+
+.menu{
+    display:flex;
+    flex-direction:column;
+    gap:12px;
+}
+
+.menu a{
+    text-decoration:none;
+    color:#cbd5e1;
+    padding:15px;
+    border-radius:12px;
+    transition:.3s;
+}
+
+.menu a:hover,
+.active{
+    background:#3b82f6;
+    color:white !important;
+}
+
+.menu i{
+    margin-right:10px;
+}
+
+/* MAIN */
+
+.main{
+    margin-left:280px;
+    width:100%;
+    padding:30px;
+}
+
+.topbar{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    margin-bottom:30px;
+}
+
+.topbar h1{
+    color:white;
+}
+
+.admin-box{
+    color:white;
+    background:#1e293b;
+    padding:12px 20px;
+    border-radius:12px;
+}
+
+/* TABLE */
+
+.table-card{
+    background:#1e293b;
+    padding:25px;
+    border-radius:20px;
+}
+
+.table-card h2{
+    color:white;
+    margin-bottom:20px;
+}
+
+table{
+    width:100%;
+    border-collapse:collapse;
+}
+
+th{
+    background:#2563eb;
+    color:white;
+    padding:15px;
+}
+
+td{
+    padding:15px;
+    color:#e2e8f0;
+    border-bottom:1px solid #334155;
+}
+
+.delete-btn{
+    background:#dc2626;
+    color:white;
+    padding:8px 15px;
+    text-decoration:none;
+    border-radius:8px;
+}
+
+.delete-btn:hover{
+    background:#b91c1c;
+}
+
+@media(max-width:768px){
+
+.sidebar{
+    width:100%;
+    position:relative;
+    height:auto;
+}
+
+.main{
+    margin-left:0;
+}
+
+table{
+    font-size:14px;
+}
+}
+
+</style>
+</head>
+
+<body>
+
+<div class="dashboard">
+
+    <!-- SIDEBAR -->
+
+    <div class="sidebar">
+
+        <div class="logo">
+            Rental<span>Hub</span>
+        </div>
+
+        <div class="menu">
+
+            <a href="{% url 'admin_dashboard' %}">
+                <i class="fa-solid fa-chart-line"></i>
+                Dashboard
+            </a>
+
+            <a href="{% url 'admin_users' %}" class="active">
+                <i class="fa-solid fa-users"></i>
+                Users
+            </a>
+
+            <a href="{% url 'admin_vehicles' %}">
+                <i class="fa-solid fa-car"></i>
+                Vehicles
+            </a>
+
+            <a href="{% url 'admin_bookings' %}">
+                <i class="fa-solid fa-calendar-check"></i>
+                Bookings
+            </a>
+
+            <a href="{% url 'admin_payments' %}">
+                 <i class="fa-solid fa-credit-card"></i>
+                Payments
+            </a>
+
+            <a href="{% url 'admin_verifications' %}">
+                <i class="fa-solid fa-file-shield"></i>
+                Verification
+            </a>
+
+            <a href="{% url 'logout' %}">
+                <i class="fa-solid fa-right-from-bracket"></i>
+                Logout
+            </a>
+
+        </div>
+
+    </div>
+
+    <!-- MAIN -->
+
+    <div class="main">
+
+        <div class="topbar">
+
+            <h1>User Management</h1>
+
+            <div class="admin-box">
+                Total Users : {{ users.count }}
+            </div>
+
+        </div>
+
+        <div class="table-card">
+
+            <h2>Registered Users</h2>
+
+            <table>
+
+                <tr>
+                    <th>ID</th>
+                    <th>Name</th>
+                    <th>Email</th>
+                    <th>Phone</th>
+                    <th>Username</th>
+                    <th>Action</th>
+                </tr>
+
+                {% for u in users %}
+
+                <tr>
+
+                    <td>{{ u.id }}</td>
+
+                    <td>{{ u.name }}</td>
+
+                    <td>{{ u.email }}</td>
+
+                    <td>{{ u.phone }}</td>
+
+                    <td>{{ u.username }}</td>
+
+                    <td>
+                        <a href=""
+                           class="delete-btn"
+                           onclick="return confirm('Delete this user?')">
+                           Delete
+                        </a>
+                    </td>
+
+                </tr>
+
+                {% empty %}
+
+                <tr>
+                    <td colspan="6" style="text-align:center;">
+                        No Users Found
+                    </td>
+                </tr>
+
+                {% endfor %}
+
+            </table>
+
+        </div>
+
+    </div>
+
+</div>
+
+</body>
+</html>
