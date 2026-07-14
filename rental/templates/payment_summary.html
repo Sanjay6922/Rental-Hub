@@ -241,6 +241,9 @@ method="post">
             ₹{{ booking.total_price }}
 
         </strong>
+        <strong>
+            Advance Payment (20%): ₹{{ booking.advance_payment }}
+        </strong>
 
     </div>
 
@@ -249,7 +252,7 @@ method="post">
     <input
     type="hidden"
     name="amount"
-    value="{{ booking.total_price }}">
+    value="{{ booking.advance_payment }}">
 
     <input
     type="hidden"

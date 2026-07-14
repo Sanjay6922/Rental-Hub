@@ -2,262 +2,390 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Messages | RentalHub</title>
 
-<title>Admin Messages | RentalHub</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 
-<link rel="stylesheet"
-href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <style>
+        /* ===== RESET & BASE ===== */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Poppins', sans-serif;
+        }
 
-<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+        body {
+            background: #0f172a;
+            color: white;
+        }
 
-<style>
+        /* ===== SIDEBAR (exactly like Payments page) ===== */
+        .dashboard {
+            display: flex;
+            min-height: 100vh;
+        }
 
-*{
-    margin:0;
-    padding:0;
-    box-sizing:border-box;
-    font-family:'Poppins',sans-serif;
-}
+        .sidebar {
+            width: 280px;
+            background: #111827;
+            padding: 25px;
+            position: fixed;
+            height: 100%;
+        }
 
-body{
-    background:#0f172a;
-    color:white;
-}
+        .logo {
+            color: white;
+            font-size: 28px;
+            font-weight: 700;
+            margin-bottom: 40px;
+        }
 
-/* Header */
+        .logo span {
+            color: #3b82f6;
+        }
 
-.header{
-    width:90%;
-    max-width:1300px;
-    margin:40px auto 25px;
-    display:flex;
-    justify-content:space-between;
-    align-items:center;
-}
+        .menu {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
 
-.header h1{
-    font-size:34px;
-}
+        .menu a {
+            text-decoration: none;
+            color: #cbd5e1;
+            padding: 15px;
+            border-radius: 12px;
+            transition: .3s;
+        }
 
-.back-btn{
-    text-decoration:none;
-    background:#2563eb;
-    color:white;
-    padding:12px 22px;
-    border-radius:10px;
-    transition:.3s;
-}
+        .menu a:hover,
+        .active {
+            background: #2563eb;
+            color: white !important;
+        }
 
-.back-btn:hover{
-    background:#1d4ed8;
-}
+        .menu a i {
+            margin-right: 12px;
+            width: 20px;
+        }
 
-/* Table Container */
+        /* ===== MAIN CONTENT ===== */
+        .main {
+            margin-left: 280px;
+            width: 100%;
+            padding: 30px;
+        }
 
-.table-container{
-    width:90%;
-    max-width:1300px;
-    margin:auto;
-    background:rgba(255,255,255,.08);
-    backdrop-filter:blur(15px);
-    border-radius:20px;
-    overflow:hidden;
-    border:1px solid rgba(255,255,255,.08);
-    box-shadow:0 20px 40px rgba(0,0,0,.35);
-}
+        .topbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 25px;
+        }
 
-table{
-    width:100%;
-    border-collapse:collapse;
-}
+        .topbar h1 {
+            color: white;
+            font-size: 34px;
+        }
 
-thead{
-    background:#2563eb;
-}
+        .topbar h1 i {
+            color: #3b82f6;
+            margin-right: 10px;
+        }
 
-thead th{
-    padding:18px;
-    text-align:left;
-    color:white;
-    font-size:15px;
-}
+        .topbar .back-btn {
+            text-decoration: none;
+            background: #2563eb;
+            color: white;
+            padding: 12px 22px;
+            border-radius: 10px;
+            transition: .3s;
+        }
 
-tbody tr{
-    border-bottom:1px solid rgba(255,255,255,.08);
-    transition:.3s;
-}
+        .topbar .back-btn:hover {
+            background: #1d4ed8;
+        }
 
-tbody tr:hover{
-    background:rgba(255,255,255,.05);
-}
+        /* ===== TABLE CONTAINER ===== */
+        .table-container {
+            width: 100%;
+            background: rgba(255, 255, 255, .08);
+            backdrop-filter: blur(15px);
+            border-radius: 20px;
+            overflow: hidden;
+            border: 1px solid rgba(255, 255, 255, .08);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, .35);
+        }
 
-tbody td{
-    padding:18px;
-    color:#cbd5e1;
-    vertical-align:top;
-}
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
 
-.message{
-    max-width:300px;
-    line-height:1.6;
-}
+        thead {
+            background: #2563eb;
+        }
 
-.reply{
-    max-width:250px;
-    color:#22c55e;
-    font-weight:500;
-}
+        thead th {
+            padding: 18px;
+            text-align: left;
+            color: white;
+            font-size: 15px;
+        }
 
-.no-reply{
-    color:#f59e0b;
-    font-weight:600;
-}
+        tbody tr {
+            border-bottom: 1px solid rgba(255, 255, 255, .08);
+            transition: .3s;
+        }
 
-/* Button */
+        tbody tr:hover {
+            background: rgba(255, 255, 255, .05);
+        }
 
-.reply-btn{
-    display:inline-block;
-    padding:10px 18px;
-    background:linear-gradient(135deg,#2563eb,#3b82f6);
-    color:white;
-    text-decoration:none;
-    border-radius:10px;
-    transition:.3s;
-    font-size:14px;
-}
+        tbody td {
+            padding: 18px;
+            color: #cbd5e1;
+            vertical-align: top;
+        }
 
-.reply-btn:hover{
-    transform:translateY(-3px);
-    box-shadow:0 10px 20px rgba(37,99,235,.35);
-}
+        .message {
+            max-width: 300px;
+            line-height: 1.6;
+        }
 
-.empty{
-    text-align:center;
-    padding:40px;
-    color:#94a3b8;
-}
+        .reply {
+            max-width: 250px;
+            color: #22c55e;
+            font-weight: 500;
+        }
 
-/* Responsive */
+        .no-reply {
+            color: #f59e0b;
+            font-weight: 600;
+        }
 
-@media(max-width:900px){
+        .reply-btn {
+            display: inline-block;
+            padding: 10px 18px;
+            background: linear-gradient(135deg, #2563eb, #3b82f6);
+            color: white;
+            text-decoration: none;
+            border-radius: 10px;
+            transition: .3s;
+            font-size: 14px;
+        }
 
-.table-container{
-    overflow-x:auto;
-}
+        .reply-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 20px rgba(37, 99, 235, .35);
+        }
 
-table{
-    min-width:900px;
-}
+        .empty {
+            text-align: center;
+            padding: 40px;
+            color: #94a3b8;
+        }
 
-}
+        /* ===== RESPONSIVE ===== */
+        @media (max-width: 900px) {
+            .table-container {
+                overflow-x: auto;
+            }
+            table {
+                min-width: 900px;
+            }
+        }
 
-</style>
+        @media (max-width: 768px) {
+            .sidebar {
+                width: 200px;
+                padding: 15px;
+            }
+            .main {
+                margin-left: 200px;
+                padding: 20px;
+            }
+            .topbar h1 {
+                font-size: 28px;
+            }
+        }
 
+        @media (max-width: 576px) {
+            .sidebar {
+                width: 60px;
+                padding: 10px;
+            }
+            .sidebar .logo {
+                font-size: 18px;
+                text-align: center;
+            }
+            .sidebar .logo span {
+                display: none;
+            }
+            .menu a {
+                padding: 12px;
+                font-size: 0;
+            }
+            .menu a i {
+                font-size: 20px;
+                margin-right: 0;
+            }
+            .main {
+                margin-left: 60px;
+                padding: 15px;
+            }
+            .topbar {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 15px;
+            }
+        }
+    </style>
 </head>
 
 <body>
 
-<div class="header">
+    <div class="dashboard">
 
-<h1><i class="fa-solid fa-envelope"></i> User Messages</h1>
+        <!-- ===== SIDEBAR (exactly like Payments page) ===== -->
+        <div class="sidebar">
 
-<a href="{% url 'admin_dashboard' %}" class="back-btn">
-<i class="fa-solid fa-arrow-left"></i> Dashboard
-</a>
+            <div class="logo">
+                Rental<span>Hub</span>
+            </div>
 
-</div>
+            <div class="menu">
 
-<div class="table-container">
+                <a href="{% url 'admin_dashboard' %}">
+                    <i class="fa-solid fa-chart-line"></i> Dashboard
+                </a>
 
-<table>
+                <a href="{% url 'admin_users' %}">
+                    <i class="fa-solid fa-users"></i> Users
+                </a>
 
-<thead>
+                <a href="{% url 'admin_vehicles' %}">
+                    <i class="fa-solid fa-car"></i> Vehicles
+                </a>
 
-<tr>
-<th>Name</th>
-<th>Email</th>
-<th>Message</th>
-<th>Date</th>
-<th>Reply</th>
-<th>Action</th>
-</tr>
+                <a href="{% url 'admin_bookings' %}">
+                    <i class="fa-solid fa-calendar-check"></i> Bookings
+                </a>
 
-</thead>
+                <a href="{% url 'admin_payments' %}">
+                    <i class="fa-solid fa-credit-card"></i> Payments
+                </a>
 
-<tbody>
+                <a href="{% url 'admin_messages' %}" class="active">
+                    <i class="fa-solid fa-envelope"></i> Messages
+                </a>
 
-{% for c in contacts %}
+                <a href="{% url 'admin_verifications' %}">
+                    <i class="fa-solid fa-file-shield"></i> Verification
+                </a>
 
-<tr>
+                <a href="{% url 'logout' %}">
+                    <i class="fa-solid fa-right-from-bracket"></i> Logout
+                </a>
 
-<td>{{ c.name }}</td>
+            </div>
 
-<td>{{ c.email }}</td>
+        </div>
 
-<td class="message">
-{{ c.message }}
-</td>
+        <!-- ===== MAIN CONTENT ===== -->
+        <div class="main">
 
-<td>
-{{ c.created_at|date:"d M Y, h:i A" }}
-</td>
+            <div class="topbar">
+                <h1><i class="fa-solid fa-envelope"></i> User Messages</h1>
+                <a href="{% url 'admin_dashboard' %}" class="back-btn">
+                    <i class="fa-solid fa-arrow-left"></i> Dashboard
+                </a>
+            </div>
 
-<td class="reply">
+            <div class="table-container">
 
-{% if c.reply %}
+                <table>
 
-{{ c.reply }}
+                    <thead>
+                        <tr>
+                            <th>Name</th>
+                            <th>Email</th>
+                            <th>Message</th>
+                            <th>Date</th>
+                            <th>Reply</th>
+                            <th>Action</th>
+                        </tr>
+                    </thead>
 
-{% else %}
+                    <tbody>
 
-<span class="no-reply">
-No Reply
-</span>
+                        {% for c in contacts %}
 
-{% endif %}
+                        <tr>
 
-</td>
+                            <td>{{ c.name }}</td>
 
-<td>
+                            <td>{{ c.email }}</td>
 
-<a href="{% url 'reply_message' c.id %}"
-class="reply-btn">
+                            <td class="message">
+                                {{ c.message }}
+                            </td>
 
-<i class="fa-solid fa-reply"></i>
+                            <td>
+                                {{ c.created_at|date:"d M Y, h:i A" }}
+                            </td>
 
-Reply
+                            <td class="reply">
 
-</a>
+                                {% if c.reply %}
 
-</td>
+                                {{ c.reply }}
 
-</tr>
+                                {% else %}
 
-{% empty %}
+                                <span class="no-reply">
+                                    No Reply
+                                </span>
 
-<tr>
+                                {% endif %}
 
-<td colspan="6" class="empty">
+                            </td>
 
-<i class="fa-solid fa-inbox fa-3x"></i>
+                            <td>
 
-<br><br>
+                                <a href="{% url 'reply_message' c.id %}" class="reply-btn">
+                                    <i class="fa-solid fa-reply"></i> Reply
+                                </a>
 
-No messages found.
+                            </td>
 
-</td>
+                        </tr>
 
-</tr>
+                        {% empty %}
 
-{% endfor %}
+                        <tr>
+                            <td colspan="6" class="empty">
+                                <i class="fa-solid fa-inbox fa-3x"></i>
+                                <br><br>
+                                No messages found.
+                            </td>
+                        </tr>
 
-</tbody>
+                        {% endfor %}
 
-</table>
+                    </tbody>
 
-</div>
+                </table>
+
+            </div>
+
+        </div>
+
+    </div>
 
 </body>
 </html>

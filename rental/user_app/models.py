@@ -131,6 +131,7 @@ class Booking(models.Model):
 
     Aadhar_number = models.CharField(max_length=20)
     license_number = models.CharField(max_length=20)
+    advance_payment = models.DecimalField(max_digits=10, decimal_places=2, null=True, blank=True)
 
     razorpay_payment_id = models.CharField(
         max_length=200,

@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Send Warning</title>
+    <style>
+        body{
+            font-family:Arial,sans-serif;
+            background:#f4f4f4;
+            padding:40px;
+        }
+
+        .card{
+            max-width:700px;
+            margin:auto;
+            background:white;
+            padding:30px;
+            border-radius:10px;
+            box-shadow:0 0 10px rgba(0,0,0,.2);
+        }
+
+        input,textarea{
+            width:100%;
+            padding:12px;
+            margin-top:10px;
+            margin-bottom:20px;
+            border:1px solid #ccc;
+            border-radius:6px;
+        }
+
+        button{
+            background:#f59e0b;
+            color:white;
+            padding:12px 25px;
+            border:none;
+            border-radius:6px;
+            cursor:pointer;
+        }
+
+        button:hover{
+            background:#d97706;
+        }
+    </style>
+</head>
+<body>
+
+<div class="card">
+
+<h2>Send Warning</h2>
+
+<p><strong>Vehicle:</strong> {{ vehicle.brand }}</p>
+<p><strong>Owner:</strong> {{ vehicle.owner.name }}</p>
+<p><strong>Email:</strong> {{ vehicle.owner.email }}</p>
+
+<form method="POST">
+
+    {% csrf_token %}
+
+    <label>Complaint Title</label>
+    <input
+        type="text"
+        name="title"
+        placeholder="Example: Vehicle not clean"
+        required>
+
+    <label>Complaint Details</label>
+
+    <textarea
+        name="complaint"
+        rows="8"
+        placeholder="Describe the customer's complaint..."
+        required></textarea>
+
+    <button type="submit">
+        Send Warning Email
+    </button>
+
+</form>
+
+</div>
+
+</body>
+</html>

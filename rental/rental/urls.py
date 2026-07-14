@@ -73,8 +73,9 @@ urlpatterns = [
     path('reject-vehicle/<int:id>/', views.reject_vehicle, name='reject_vehicle'),
     path('view-review/', views.view_review, name='view_review'),
     path("forgot-password/", views.forgot_password, name="forgot_password"),
-path("verify-otp/", views.verify_otp, name="verify_otp"),
-path("reset-password/", views.reset_password, name="reset_password"),
+    path("verify-otp/", views.verify_otp, name="verify_otp"),
+    path("reset-password/", views.reset_password, name="reset_password"),
+    path("admin-dashboard/warning/<int:vehicle_id>/",views.send_warning,name="send_warning",)
 
 ]
 

@@ -99,7 +99,7 @@ def login_fun(request):
         })
 def logout(request):
         request.session.flush()  # Clear all session data
-        return render(request, 'index.html')  # Redirect to the profile view (or login page)
+        return redirect('/')  # Redirect to the profile view (or login page)
             
 # def login_show(request):
 #     reviews = Review.objects.all().order_by('-id')  # fetch all reviews, newest first
@@ -254,6 +254,12 @@ from .models import veh_listing, User, Booking
 def book_vehicle(request, id):
     vehicle = veh_listing.objects.get(id=id)
     user = User.objects.get(email=request.session.get('u_id'))
+    if vehicle.owner == user:
+        return render(request, 'vehicle_booking.html', {
+            'vehicle': vehicle,
+            'is_owner': True,
+            'error': 'You cannot book your own vehicle.'
+        })
 
     if request.method == "POST":
         customer_name = request.POST.get('name')
@@ -298,7 +304,8 @@ def book_vehicle(request, id):
                 'error': 'Return date must be after pickup date'
             })
 
-        total_price = (total_days * float(vehicle.price_per_day)) + 2000
+        total_price = (total_days * float(vehicle.price_per_day)) 
+        advance_payment = total_price * 0.2  # 20% advance payment
 
         # Create booking
         Booking.objects.create(
@@ -313,6 +320,7 @@ def book_vehicle(request, id):
             license_image=license_image,
             aadhar_image=aadhar_image,
             total_price=total_price,
+            advance_payment=advance_payment,
             booking_status='Pending'
         )
 
@@ -980,3 +988,66 @@ def reset_password(request):
         })
 
     return render(request,"reset_password.html")
+
+
+from django.shortcuts import render, redirect, get_object_or_404
+from django.core.mail import send_mail
+from django.contrib import messages
+
+from .models import veh_listing
+
+
+def send_warning(request, vehicle_id):
+
+    vehicle = get_object_or_404(veh_listing, id=vehicle_id)
+
+    if request.method == "POST":
+
+        title = request.POST.get("title")
+        complaint = request.POST.get("complaint")
+
+        owner = vehicle.owner
+
+        subject = f"Warning: {title}"
+
+        message = f"""
+Dear {owner.name},
+
+A customer has submitted a complaint regarding your vehicle.
+
+Vehicle Details
+-------------------------
+Brand : {vehicle.brand}
+Number Plate : {vehicle.number_plate}
+Location : {vehicle.location}
+
+Complaint
+-------------------------
+{complaint}
+
+Please resolve this issue as soon as possible.
+
+Failure to resolve repeated complaints may result in suspension or permanent removal of your vehicle listing.
+
+If you believe this complaint is incorrect, please contact RentalHub Support.
+
+Regards,
+
+RentalHub Admin Team
+"""
+
+        send_mail(
+            subject,
+            message,
+            "yourgmail@gmail.com",
+            [owner.email],
+            fail_silently=False,
+        )
+
+        messages.success(request, "Warning email sent successfully.")
+
+        return redirect("admin_vehicles")
+
+    return render(request, "warning_form.html", {
+        "vehicle": vehicle
+    })
